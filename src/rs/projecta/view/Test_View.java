@@ -1,4 +1,5 @@
 package rs.projecta.view;
+import android.graphics.*;
 
 public class Test_View
 extends android.view.SurfaceView
@@ -11,6 +12,7 @@ implements
   public rs.projecta.object.Player player;
   public Object camera;
   public Thread game_loop;
+  public android.graphics.Paint p;
   public static final int OBJ_COUNT=50;
   
   public Test_View(android.content.Context ctx)
@@ -30,6 +32,10 @@ implements
     this.objs[1]=new rs.projecta.object.Background(this.player);
     this.objs[2]=new rs.projecta.object.Pointer(
       this.world, this.player, (rs.projecta.object.Has_Position)this.objs[3]);
+      
+    this.p=new android.graphics.Paint();
+    this.p.setColor(0xffffffff);
+    this.p.setTextSize(20f);
   }
   
   @Override
@@ -66,8 +72,23 @@ implements
     }
     
     c.restore();
+    
+    this.Draw_Console(c);
   }
 
+  public void Draw_Console(android.graphics.Canvas c)
+  {
+    String[] lines;
+    int l;
+    
+    if (rs.android.Util.NotEmpty(this.world.debug_msg))
+    {
+      lines=this.world.debug_msg.split("\n");
+      for (l=0; l<lines.length; l++)
+        c.drawText(lines[l], 5, l*p.getTextSize()+25, p);
+    }
+  }
+  
   @Override
   public void surfaceCreated(android.view.SurfaceHolder s)
   {
@@ -90,7 +111,7 @@ implements
   
     while (!this.game_loop.interrupted())
     {
-      this.world.phys_world.step(1f, 8, 8);
+      this.world.phys_world.step(0.01f, 8, 8);
       
       s = this.getHolder();
       if (s!=null)

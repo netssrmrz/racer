@@ -103,6 +103,7 @@ implements
 
   public void On_Tilt_Changed(float[] o, float[] v, float[] d)
   {
+    this.gfx_view.player.User_Action(d[1], d[2]);
     this.gfx_view.player.Accelerate(d[1]);    
     this.gfx_view.player.Turn(d[2]);
   }

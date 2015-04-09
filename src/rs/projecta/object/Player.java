@@ -55,22 +55,48 @@ implements Is_Drawable , Has_Position, Has_Direction
 		return (float)java.lang.Math.toDegrees(this.body.getAngle());
 	}
 
+  public void User_Action(float f, float t)
+  {
+    this.world.debug_msg="";
+  }
+  
 	public void Turn(float t)
 	{
     float av;
+    String str;
     
     av=this.body.getAngularVelocity();
-    if ((t>0 && av<0.02) || (t<0 && av>-0.02))
-      this.body.applyTorque(t/4f);
+    if ((t>0 && av<2) || (t<0 && av>-2))
+      this.body.applyTorque(t*2);
+      
+    str=
+      "\nSide Tilt: "+t+"\n"+
+      "Angular Velocity: "+av;
+    this.world.debug_msg+=str;
 	}
 
   public void Accelerate(float f)
   {
-    org.jbox2d.common.Vec2 lat_vel;
+    org.jbox2d.common.Vec2 lat_vel, lat_impulse, frwd_vec,
+      body_frwd_vec, vel;
+    String str;
     
     lat_vel=Calc_Lat_Vel(this.body);
+    lat_impulse=lat_vel.mul(-this.body.getMass());
+    this.body.applyLinearImpulse(lat_impulse, this.body.getWorldCenter());
 
-    //body.applyForceToCenter(fvw);
+    frwd_vec=new org.jbox2d.common.Vec2(0, -f*100f);
+    body_frwd_vec=this.body.getWorldVector(frwd_vec);
+    body.applyForceToCenter(body_frwd_vec);
+    
+    vel=this.body.getLinearVelocity();
+    str=
+      "Speed: "+vel.length()+"\n"+
+      "Velocity; "+vel.x+", "+vel.y+"\n"+
+      "Forward Tilt: "+f+"\n"+
+      "frwd_vec: "+frwd_vec.x+", "+frwd_vec.y+"\n"+
+      "body_frwd_vec: "+body_frwd_vec.x+", "+body_frwd_vec.y;
+    this.world.debug_msg+=str;
   }
   
   public org.jbox2d.common.Vec2 Calc_Lat_Vel(org.jbox2d.dynamics.Body body)

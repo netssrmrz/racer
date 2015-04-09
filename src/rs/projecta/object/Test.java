@@ -41,7 +41,7 @@ implements Is_Drawable ,Has_Position
     
     md=new org.jbox2d.collision.shapes.MassData();
     md.mass=m;
-    body.setMassData(md);
+    //body.setMassData(md);
     
     this.p = new android.graphics.Paint();
     this.p.setColor(0xffff0000);
