@@ -49,9 +49,9 @@ public class Pointer
       // ay/(ty/tx)=x
       // (ay*tx)/ty=x
       
-      c.drawLine(x, y, x+20, y+80, this.p);
-      c.drawLine(x+20, y+80, x-20, y+80, this.p);
-      c.drawLine(x-20, y+80, x, y, this.p);
+      c.drawLine(x, y, x-20, y-80, this.p);
+      c.drawLine(x-20, y-80, x+20, y-80, this.p);
+      c.drawLine(x+20, y-80, x, y, this.p);
     }
 
     public float Get_X()

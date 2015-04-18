@@ -1,37 +1,21 @@
 package rs.projecta.view;
-import android.graphics.*;
+import org.jbox2d.dynamics.*;
 
 public class Test_View
 extends android.view.SurfaceView
 implements 
-  android.view.SurfaceHolder.Callback,
-  java.lang.Runnable
+  android.view.SurfaceHolder.Callback
 {
   public rs.projecta.World world;
-  public Object[] objs; 
-  public rs.projecta.object.Player player;
   public Object camera;
-  public Thread game_loop;
   public android.graphics.Paint p;
-  public static final int OBJ_COUNT=50;
   
-  public Test_View(android.content.Context ctx)
+  public Test_View(android.content.Context ctx, rs.projecta.World w)
   {
     super(ctx);
-    int c;
     
-    this.world=new rs.projecta.World();
-    
-    this.player=new rs.projecta.object.Player(0, 0, this.world);
-    this.camera=this.player;
-    
-    this.objs=new Object[OBJ_COUNT+3];
-    for (c=0; c<OBJ_COUNT; c++)
-      this.objs[c+3]=new rs.projecta.object.Test(this.world);
-    this.objs[0]=this.player;
-    this.objs[1]=new rs.projecta.object.Background(this.player);
-    this.objs[2]=new rs.projecta.object.Pointer(
-      this.world, this.player, (rs.projecta.object.Has_Position)this.objs[3]);
+    this.world=w;
+    this.camera=w.player;
       
     this.p=new android.graphics.Paint();
     this.p.setColor(0xffffffff);
@@ -51,7 +35,7 @@ implements
         -((rs.projecta.object.Has_Position)camera).Get_Y());
     
     c.drawColor(0xff000000);
-    for (Object o: this.objs)
+    for (Object o: this.world.objs)
     {
       if (o instanceof rs.projecta.object.Is_Drawable)
       {
@@ -73,7 +57,7 @@ implements
     
     c.restore();
     
-    this.Draw_Console(c);
+    //this.Draw_Console(c);
   }
 
   public void Draw_Console(android.graphics.Canvas c)
@@ -104,15 +88,11 @@ implements
   {
   }
 
-  public void run()
+  public void Draw_World_Step()
   {
     android.view.SurfaceHolder s;
     android.graphics.Canvas c;
   
-    while (!this.game_loop.interrupted())
-    {
-      this.world.phys_world.step(0.01f, 8, 8);
-      
       s = this.getHolder();
       if (s!=null)
       {
@@ -123,25 +103,10 @@ implements
           this.getHolder().unlockCanvasAndPost(c);
         }
       }
-    }
 	}
   
-  public void Start_Loop()
+  /*public void On_World_Init(rs.projecta.World w)
   {
-    if (this.game_loop == null)
-    {
-      this.game_loop = new Thread(this);
-      this.game_loop.start();
-    }
-  }
-
-  public void Stop_Loop()
-  {
-    if (this.game_loop != null)
-    {
-      this.game_loop.interrupt();
-      try {this.game_loop.join();} catch(java.lang.Exception e){};
-      this.game_loop=null;
-    }
-  }
+    this.camera=w.player;
+  }*/
 }

@@ -4,7 +4,8 @@ public class Test_Activity
 extends android.app.Activity
 implements 
   android.widget.Button.OnClickListener,
-  rs.projecta.Tilt_Event_Listener
+  rs.projecta.Tilt_Event_Listener,
+  rs.projecta.World_Step_Listener
 {
   public static final int BTNID_FW=1;
   public static final int BTNID_BW=2;
@@ -13,6 +14,7 @@ implements
 
   public rs.projecta.view.Test_View gfx_view;
   public rs.projecta.Tilt_Manager tilt_man;
+  public rs.projecta.World world;
 
   @Override
   public void onCreate(android.os.Bundle saved_state)
@@ -20,13 +22,15 @@ implements
     super.onCreate(saved_state);
     android.widget.LinearLayout main_layout, button_bar;
 
+    this.world=new rs.projecta.World(this);
+    
     this.tilt_man=new rs.projecta.Tilt_Manager(this);
     this.tilt_man.tilt_event_listener=this;
     
     main_layout = new android.widget.LinearLayout(this);
     main_layout.setOrientation(android.widget.LinearLayout.VERTICAL);
     
-    this.gfx_view = new rs.projecta.view.Test_View(this);
+    this.gfx_view = new rs.projecta.view.Test_View(this, this.world);
     main_layout.addView(this.gfx_view, 
       new android.widget.LinearLayout.LayoutParams(
         android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 0, 90f));
@@ -91,21 +95,21 @@ implements
     if (v instanceof android.widget.Button)
     {
       if (v.getId()==BTNID_FW)
-        this.gfx_view.player.Accelerate(100);
+        this.gfx_view.world.player.Accelerate(100);
       if (v.getId()==BTNID_BW)
-        this.gfx_view.player.Accelerate(-100);
+        this.gfx_view.world.player.Accelerate(-100);
       if (v.getId()==BTNID_LT)
-        this.gfx_view.player.Turn(-100);
+        this.gfx_view.world.player.Turn(-100);
       if (v.getId()==BTNID_RT)
-        this.gfx_view.player.Turn(100);
+        this.gfx_view.world.player.Turn(100);
     }
   }
 
   public void On_Tilt_Changed(float[] o, float[] v, float[] d)
   {
-    this.gfx_view.player.User_Action(d[1], d[2]);
-    this.gfx_view.player.Accelerate(d[1]);    
-    this.gfx_view.player.Turn(d[2]);
+    this.gfx_view.world.player.User_Action(d[1], d[2]);
+    this.gfx_view.world.player.Accelerate(d[1]);    
+    this.gfx_view.world.player.Turn(d[2]);
   }
   
   @Override
@@ -113,7 +117,7 @@ implements
   {
     super.onResume();
     
-    this.gfx_view.Start_Loop();
+    this.world.Start_Loop();
     this.tilt_man.Register();
   }
 
@@ -123,6 +127,16 @@ implements
     super.onPause();
     
     this.tilt_man.Unregister();
-    this.gfx_view.Stop_Loop();
+    this.world.Stop_Loop();
+  }
+ 
+  public void On_World_Step(rs.projecta.World w)
+  {
+    this.gfx_view.Draw_World_Step();
+  }
+
+  public void On_World_Init(rs.projecta.World w)
+  {
+    //this.gfx_view.camera=w.player;
   }
 }

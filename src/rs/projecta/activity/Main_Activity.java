@@ -8,6 +8,8 @@ implements android.widget.Button.OnClickListener
 	public void onCreate(android.os.Bundle saved_state)
 	{
 		android.widget.Button button;
+    android.widget.ScrollView scroll_view;
+    android.widget.ListView list_view;
     
 		super.onCreate(saved_state);
 		

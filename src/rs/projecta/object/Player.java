@@ -1,7 +1,7 @@
 package rs.projecta.object;
 
 public class Player
-implements Is_Drawable , Has_Position, Has_Direction
+implements Is_Drawable, Has_Position, Has_Direction, Can_Collide
 {
 	public android.graphics.Paint p;
   public org.jbox2d.dynamics.Body body;
@@ -19,6 +19,7 @@ implements Is_Drawable , Has_Position, Has_Direction
     body_def.position=new org.jbox2d.common.Vec2(
       x/this.world.phys_scale, y/this.world.phys_scale);
     body_def.angle=0;
+    body_def.userData=this;
     body=world.phys_world.createBody(body_def);
 
     fix_def=new org.jbox2d.dynamics.FixtureDef();
@@ -111,5 +112,16 @@ implements Is_Drawable , Has_Position, Has_Direction
     res=lat_vec.mul(lat_vel);
     
     return res;
+  }
+  
+  public void Contact(org.jbox2d.dynamics.contacts.Contact c)
+  {
+    Object a, b;
+    
+    a=c.getFixtureA().getBody().getUserData();
+    b=c.getFixtureB().getBody().getUserData();
+    
+    if ((a!=null && a instanceof Finish) || (b!=null && b instanceof Finish))
+      this.world.state=rs.projecta.World.STATE_LEVELCOMPLETE;
   }
 }
