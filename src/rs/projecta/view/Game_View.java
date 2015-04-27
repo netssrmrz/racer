@@ -1,107 +1,116 @@
 package rs.projecta.view;
-//import android.graphics.*;
-//import rs.projecta.object.*;
+import org.jbox2d.dynamics.*;
 
 public class Game_View
 extends android.view.SurfaceView
-implements android.view.SurfaceHolder.Callback
+implements 
+android.view.SurfaceHolder.Callback
 {
-	public boolean has_surface;
-	public java.util.ArrayList<Object> objs;
-	public rs.projecta.Camera cam;
-  public android.graphics.Paint clr_paint;
-  public rs.projecta.object.Player player;
+  public rs.projecta.World world;
+  public Object camera;
+  public android.graphics.Paint p;
+  android.view.SurfaceHolder surface;
 
-	public Game_View(android.content.Context ctx, 
-	  java.util.ArrayList<Object> objs)
-	{
-		super(ctx);
+  public Game_View(android.content.Context ctx, rs.projecta.World w)
+  {
+    super(ctx);
 
-		this.getHolder().addCallback(this);
-		this.has_surface = false;
-		this.cam=new rs.projecta.Camera();
-		this.objs=objs;
-		
-    this.clr_paint = new android.graphics.Paint();
-		this.clr_paint.setColor(0xff000000);
-    
-		for (Object obj: this.objs)
-		{
-      if (obj instanceof rs.projecta.object.Player)
-        this.player=(rs.projecta.object.Player)obj;
-		}
+    this.On_World_Init(w);
+
+    this.p = new android.graphics.Paint();
+    this.p.setColor(0xffffffff);
+    this.p.setTextSize(20f);
+  }
+
+  @Override
+  public void onDraw(android.graphics.Canvas c)
+  {
+    c.save();
+    c.translate((float)c.getWidth() / 2f, (float)c.getHeight() / 2f);
+    if (camera instanceof rs.projecta.object.Has_Direction)
+      c.rotate(-((rs.projecta.object.Has_Direction)camera).Get_Angle_Degrees());
+    if (camera instanceof rs.projecta.object.Has_Position)
+      c.translate(
+        -((rs.projecta.object.Has_Position)camera).Get_X(), 
+        -((rs.projecta.object.Has_Position)camera).Get_Y());
+
+    c.drawColor(0xff000000);
+    for (Object o: this.world.objs)
+    {
+      if (o instanceof rs.projecta.object.Is_Drawable)
+      {
+        c.save();
+
+        if (o instanceof rs.projecta.object.Has_Position)
+          c.translate(
+            ((rs.projecta.object.Has_Position)o).Get_X(), 
+            ((rs.projecta.object.Has_Position)o).Get_Y());
+
+        if (o instanceof rs.projecta.object.Has_Direction)
+          c.rotate(((rs.projecta.object.Has_Direction)o).Get_Angle_Degrees());
+
+        ((rs.projecta.object.Is_Drawable)o).Draw(c);
+
+        c.restore();
+      }
+    }
+
+    c.restore();
+
+    //this.Draw_Console(c);
+  }
+
+  public void Draw_Console(android.graphics.Canvas c)
+  {
+    String[] lines;
+    int l;
+
+    if (rs.android.Util.NotEmpty(this.world.debug_msg))
+    {
+      lines = this.world.debug_msg.split("\n");
+      for (l = 0; l < lines.length; l++)
+        c.drawText(lines[l], 5, l * p.getTextSize() + 25, p);
+    }
+  }
+
+  @Override
+  public void surfaceCreated(android.view.SurfaceHolder s)
+  {
+    android.util.Log.d("surfaceCreated()", "Entered");
+    this.surface = s;
+  }
+
+  @Override
+  public void surfaceChanged(android.view.SurfaceHolder s, int format, int w, int h)
+  {
+  }
+
+  @Override
+  public void surfaceDestroyed(android.view.SurfaceHolder s)
+  {
+    android.util.Log.d("surfaceDestroyed()", "Entered");
+    this.surface = null;
+  }
+
+  public void Draw_World_Step()
+  {
+    android.graphics.Canvas c;
+
+    this.surface = this.getHolder();
+    if (this.surface != null)
+    {
+      c = this.surface.lockCanvas();
+      if (c != null)
+      {
+        this.onDraw(c);
+        this.getHolder().unlockCanvasAndPost(c);
+      }
+    }
 	}
 
-	@Override
-	public void onDraw(android.graphics.Canvas c)
-	{
-		rs.projecta.object.Is_Drawable dobj;
-		rs.projecta.object.Has_Position pobj;
-
-    c.drawRect(0, 0, this.getWidth(), this.getHeight(), this.clr_paint);
-		for (Object obj: this.objs)
-		{
-			c.save();
-			this.cam.Move_To(c, 
-        this.player.body.getPosition().x, 
-        this.player.body.getPosition().y, 
-        this.player.body.getAngle());
-			
-			if (obj instanceof rs.projecta.object.Is_Drawable)
-			{
-				dobj=(rs.projecta.object.Is_Drawable)obj;
-				
-				if (obj instanceof rs.projecta.object.Has_Position)
-				{
-					pobj=(rs.projecta.object.Has_Position)obj;
-					
-					c.save();
-					c.translate(pobj.Get_X(), pobj.Get_Y());
-					
-					if (obj instanceof rs.projecta.object.Has_Direction)
-					{
-						c.rotate(((rs.projecta.object.Has_Direction)obj).Get_Angle_Degrees());
-					}
-					
-					dobj.Draw(c);
-					c.restore();
-				}
-				else
-				  dobj.Draw(c);
-			}
-			
-			c.restore();
-		}
-	}
-
-	@Override
-	public void surfaceCreated(android.view.SurfaceHolder s)
-	{
-		this.has_surface = true;
-	}
-
-	@Override
-	public void surfaceChanged(android.view.SurfaceHolder s, int f, int w, int h)
-	{
-    this.cam.size_x=w;
-    this.cam.size_y=h;
-	}
-
-	@Override
-	public void surfaceDestroyed(android.view.SurfaceHolder s)
-	{
-		this.has_surface = false;
-	}
-
-	public void Draw()
-	{
-		android.graphics.Canvas c;
-
-		if (this.has_surface)
-		{
-		  c = this.getHolder().lockCanvas();
-		  this.onDraw(c);
-		  this.getHolder().unlockCanvasAndPost(c);
-		}
-	}
+  public void On_World_Init(rs.projecta.World w)
+  {
+    this.world = w;
+    this.camera = w.player;
+  }
 }

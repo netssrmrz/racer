@@ -1,5 +1,5 @@
 package rs.projecta;
-import java.util.*;
+//import java.util.*;
 
 public class World
 implements 
@@ -15,6 +15,7 @@ implements
   public rs.projecta.World_Step_Listener world_step_listener;
   public java.util.ArrayList<Object> objs; //, del_objs;
   public int state;
+  public boolean do_processing;
   
   public static final int STATE_STOP=0;
   public static final int STATE_PLAY=1;
@@ -87,17 +88,21 @@ implements
       this.world_step_listener.On_World_Init(this);
   }
   
-  public void On_Level_Complete()
+  /*public void On_Level_Complete()
   {
     android.util.Log.d("On_Level_Complete()", "Entered");
-    //this.Init_Level();
-    //this.Start_Loop();
-  }
+    android.content.Intent i;
 
+    i=new android.content.Intent(this, rs.projecta.activity.Finish_Activity.class);
+    this.startActivity(i);
+  }*/
+  
   public void run()
   {
     android.util.Log.d("run()", "Entered");
-    while (this.state==STATE_PLAY)
+    
+    this.do_processing=true;
+    while (this.do_processing)
     {
       this.phys_world.step(0.01f, 8, 8);
       
@@ -119,7 +124,8 @@ implements
     
     if (this.state==STATE_LEVELCOMPLETE)
     {
-      this.On_Level_Complete();
+      if (this.world_step_listener!=null)
+        this.world_step_listener.On_World_Finish(this);
     }
     
     this.game_loop=null;
@@ -137,9 +143,10 @@ implements
 
   public void Stop_Loop()
   {
+    android.util.Log.d("Stop_Loop()", "Entered");
     if (this.game_loop != null)
     {
-      this.state=STATE_STOP;
+      this.do_processing=false;
       try {this.game_loop.join();} catch(java.lang.Exception e){};
     }
   }

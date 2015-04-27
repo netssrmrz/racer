@@ -122,6 +122,9 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide
     b=c.getFixtureB().getBody().getUserData();
     
     if ((a!=null && a instanceof Finish) || (b!=null && b instanceof Finish))
+    {
+      this.world.do_processing=false;
       this.world.state=rs.projecta.World.STATE_LEVELCOMPLETE;
+    }
   }
 }

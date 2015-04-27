@@ -25,7 +25,7 @@ implements Has_Position, Is_Drawable
 
     fix_def=new org.jbox2d.dynamics.FixtureDef();
     fix_def.shape=new org.jbox2d.collision.shapes.CircleShape();
-    fix_def.shape.setRadius(10f/this.world.phys_scale);
+    fix_def.shape.setRadius(50f/this.world.phys_scale);
     fix_def.density=1;
     fix_def.friction=0;
     fix_def.restitution=1;

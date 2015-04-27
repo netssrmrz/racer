@@ -7,6 +7,7 @@ implements Is_Drawable ,Has_Position
   public android.graphics.Paint p;
   public rs.projecta.World world;
   public float radius;
+  int frame;
   
   public Test(rs.projecta.World world)
   {
@@ -45,12 +46,16 @@ implements Is_Drawable ,Has_Position
     
     this.p = new android.graphics.Paint();
     this.p.setColor(0xffff0000);
+    
+    this.frame=rnd.nextInt(10);
   }
 
   @Override
   public void Draw(android.graphics.Canvas c)
   {
-    c.drawCircle(0, 0, this.radius, p);
+    c.drawCircle(0, 0, this.radius+(this.frame/2), p);
+    
+    this.frame=(this.frame+1) % 10;
   }
   
   public float Get_X()
