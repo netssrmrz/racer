@@ -23,10 +23,10 @@ implements
   public static final int STATE_QUIT=3;
   public static final int STATE_DIE=4;
   
-  public World(rs.projecta.World_Step_Listener l)
+  public World(rs.projecta.World_Step_Listener l, rs.projecta.level.Level level)
   {
     this.world_step_listener=l;
-    this.Init_Level();
+    this.Init_Level(level);
   }
 
   public void beginContact(org.jbox2d.dynamics.contacts.Contact c)
@@ -60,11 +60,9 @@ implements
     // TODO: Implement this method
   }
   
-  public void Init_Level()
+  public void Init_Level(rs.projecta.level.Level level)
   {
-    int c;
-    
-    android.util.Log.d("Init_Level()", "Entered");
+    //android.util.Log.d("Init_Level()", "Entered");
     
     this.state=STATE_PLAY; 
     this.phys_world=new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,0));
@@ -76,9 +74,8 @@ implements
     this.player=new rs.projecta.object.Player(0, 0, this);
     
     this.objs=new java.util.ArrayList<Object>();
-    this.objs.add(new rs.projecta.object.Finish(this));
-    for (c=0; c<OBJ_COUNT; c++)
-      this.objs.add(new rs.projecta.object.Test(this));
+    level.Build(this);
+      
     this.objs.add(this.player);
     this.objs.add(new rs.projecta.object.Background(this.player));
     this.objs.add(new rs.projecta.object.Pointer(
@@ -88,18 +85,9 @@ implements
       this.world_step_listener.On_World_Init(this);
   }
   
-  /*public void On_Level_Complete()
-  {
-    android.util.Log.d("On_Level_Complete()", "Entered");
-    android.content.Intent i;
-
-    i=new android.content.Intent(this, rs.projecta.activity.Finish_Activity.class);
-    this.startActivity(i);
-  }*/
-  
   public void run()
   {
-    android.util.Log.d("run()", "Entered");
+    //android.util.Log.d("run()", "Entered");
     
     this.do_processing=true;
     while (this.do_processing)
@@ -133,7 +121,7 @@ implements
 
   public void Start_Loop()
   {
-    android.util.Log.d("Start_Loop()", "Entered");
+    //android.util.Log.d("Start_Loop()", "Entered");
     if (this.game_loop == null)
     {
       this.game_loop = new Thread(this);
@@ -143,11 +131,25 @@ implements
 
   public void Stop_Loop()
   {
-    android.util.Log.d("Stop_Loop()", "Entered");
+    //android.util.Log.d("Stop_Loop()", "Entered");
     if (this.game_loop != null)
     {
       this.do_processing=false;
       try {this.game_loop.join();} catch(java.lang.Exception e){};
     }
   }
+  
+  /*public void Init_Level_One()
+  {
+    this.objs.add(new rs.projecta.object.Finish(this, 0, -3800));
+    
+    this.objs.add(new rs.projecta.object.Wall(this, 0, -3900, 180, 10)); // top
+    this.objs.add(new rs.projecta.object.Wall(this, 200, -1900, 10, 2000)); // right
+    this.objs.add(new rs.projecta.object.Wall(this, -200, -1900, 10, 2000)); // left
+    this.objs.add(new rs.projecta.object.Wall(this, 0, 100, 180, 10)); // bottom
+    
+    // int c;
+    //for (c=0; c<OBJ_COUNT; c++)
+      //this.objs.add(new rs.projecta.object.Test(this));
+  }*/
 }

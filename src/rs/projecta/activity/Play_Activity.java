@@ -1,4 +1,5 @@
 package rs.projecta.activity;
+import rs.projecta.level.*;
 
 public class Play_Activity 
 extends android.app.Activity
@@ -15,6 +16,7 @@ implements
   public rs.projecta.view.Game_View gfx_view;
   public rs.projecta.Tilt_Manager tilt_man;
   public rs.projecta.World world;
+  public rs.projecta.level.Level curr_level;
 
   @Override
   public void onCreate(android.os.Bundle saved_state)
@@ -22,8 +24,9 @@ implements
     super.onCreate(saved_state);
     android.widget.LinearLayout main_layout, button_bar;
 
-    android.util.Log.d("Test_Activity.onCreate()", "Entered");
-    this.world=new rs.projecta.World(this);
+    //android.util.Log.d("Test_Activity.onCreate()", "Entered");
+    this.curr_level=rs.projecta.Util.Get_Level(this);
+    this.world=new rs.projecta.World(this, this.curr_level);
     
     this.tilt_man=new rs.projecta.Tilt_Manager(this);
     this.tilt_man.tilt_event_listener=this;
@@ -118,7 +121,7 @@ implements
   {
     super.onResume();
     
-    android.util.Log.d("onResume()", "Entered");
+    //android.util.Log.d("onResume()", "Entered");
     this.world.Start_Loop();
     this.tilt_man.Register();
   }
@@ -128,7 +131,7 @@ implements
   {
     super.onPause();
     
-    android.util.Log.d("onPause()", "Entered");
+    //android.util.Log.d("onPause()", "Entered");
     this.tilt_man.Unregister();
     this.world.Stop_Loop();
   }
@@ -146,11 +149,12 @@ implements
   
   public void On_World_Finish(rs.projecta.World w)
   {
-    android.util.Log.d("On_World_Finish()", "Entered");
+    //android.util.Log.d("On_World_Finish()", "Entered");
     android.content.Intent i;
 
     i=new android.content.Intent(this, rs.projecta.activity.Finish_Activity.class);
     i.setFlags(android.content.Intent.FLAG_ACTIVITY_NO_HISTORY);
+    i.putExtra("level_class", this.curr_level.getClass().getName());
     this.startActivity(i);
   }
 }

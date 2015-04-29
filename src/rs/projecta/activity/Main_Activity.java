@@ -40,6 +40,7 @@ implements
     
     i=new android.content.Intent(this, Play_Activity.class);
     i.setFlags(android.content.Intent.FLAG_ACTIVITY_NO_HISTORY);
+    i.putExtra("level_class", rs.projecta.level.Tutorial_Forward.class.getName());
     this.startActivity(i);
   }
 }

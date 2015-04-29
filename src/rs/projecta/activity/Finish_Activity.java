@@ -5,15 +5,19 @@ extends android.app.Activity
 implements 
 android.widget.Button.OnClickListener
 {
+  public rs.projecta.level.Level curr_level;
+  
   @Override
   public void onCreate(android.os.Bundle saved_state)
   {
     android.widget.Button button;
     android.widget.TextView msg_view;
     android.widget.LinearLayout layout_view;
-
+    
     super.onCreate(saved_state);
 
+    this.curr_level=rs.projecta.Util.Get_Level(this);
+    
     msg_view=new android.widget.TextView(this);
     msg_view.setText("Well Done!");
     msg_view.setTextSize(10f);
@@ -36,6 +40,8 @@ android.widget.Button.OnClickListener
     android.content.Intent i;
 
     i=new android.content.Intent(this, Play_Activity.class);
+    i.setFlags(android.content.Intent.FLAG_ACTIVITY_NO_HISTORY);
+    i.putExtra("level_class", this.curr_level.Get_Next_Level());
     this.startActivity(i);
   }
 }

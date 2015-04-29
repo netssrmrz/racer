@@ -76,7 +76,7 @@ android.view.SurfaceHolder.Callback
   @Override
   public void surfaceCreated(android.view.SurfaceHolder s)
   {
-    android.util.Log.d("surfaceCreated()", "Entered");
+    //android.util.Log.d("surfaceCreated()", "Entered");
     this.surface = s;
   }
 
@@ -88,7 +88,7 @@ android.view.SurfaceHolder.Callback
   @Override
   public void surfaceDestroyed(android.view.SurfaceHolder s)
   {
-    android.util.Log.d("surfaceDestroyed()", "Entered");
+    //android.util.Log.d("surfaceDestroyed()", "Entered");
     this.surface = null;
   }
 
