@@ -31,6 +31,11 @@
             android:name="rs.projecta.activity.Finish_Activity">
         </activity>
       
+      <activity
+        android:label="Level Editor"
+        android:name="rs.projecta.activity.Editor_Activity">
+      </activity>
+      
     </application>
 
 </manifest>

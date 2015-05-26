@@ -1,38 +1,48 @@
 package rs.projecta.view;
-import org.jbox2d.dynamics.*;
 
 public class Game_View
 extends android.view.SurfaceView
 implements 
 android.view.SurfaceHolder.Callback
 {
-  public rs.projecta.World world;
-  public Object camera;
-  public android.graphics.Paint p;
+  //public rs.projecta.World world;
+  //public android.graphics.Paint p;
   android.view.SurfaceHolder surface;
+  public World_View world_view;
 
   public Game_View(android.content.Context ctx, rs.projecta.World w)
   {
     super(ctx);
 
+    this.world_view=new World_View(ctx, w);
+    this.world_view.camera=this.world_view.world.Get_Player();
+    
     this.On_World_Init(w);
 
-    this.p = new android.graphics.Paint();
+    /*this.p = new android.graphics.Paint();
     this.p.setColor(0xffffffff);
-    this.p.setTextSize(20f);
+    this.p.setTextSize(20f);*/
   }
 
   @Override
   public void onDraw(android.graphics.Canvas c)
   {
+    this.world_view.onDraw(c);
+  }
+     
+  /*@Override
+  public void onDraw(android.graphics.Canvas c)
+  {
+    android.util.Log.d("onDraw()", "Entry");
+    
     c.save();
     c.translate((float)c.getWidth() / 2f, (float)c.getHeight() / 2f);
-    if (camera instanceof rs.projecta.object.Has_Direction)
-      c.rotate(-((rs.projecta.object.Has_Direction)camera).Get_Angle_Degrees());
-    if (camera instanceof rs.projecta.object.Has_Position)
+    if (this.world.level.camera instanceof rs.projecta.object.Has_Direction)
+      c.rotate(-((rs.projecta.object.Has_Direction)this.world.level.camera).Get_Angle_Degrees());
+    if (this.world.level.camera instanceof rs.projecta.object.Has_Position)
       c.translate(
-        -((rs.projecta.object.Has_Position)camera).Get_X(), 
-        -((rs.projecta.object.Has_Position)camera).Get_Y());
+        -((rs.projecta.object.Has_Position)this.world.level.camera).Get_X(), 
+        -((rs.projecta.object.Has_Position)this.world.level.camera).Get_Y());
 
     c.drawColor(0xff000000);
     for (Object o: this.world.objs)
@@ -56,8 +66,6 @@ android.view.SurfaceHolder.Callback
     }
 
     c.restore();
-
-    //this.Draw_Console(c);
   }
 
   public void Draw_Console(android.graphics.Canvas c)
@@ -71,7 +79,7 @@ android.view.SurfaceHolder.Callback
       for (l = 0; l < lines.length; l++)
         c.drawText(lines[l], 5, l * p.getTextSize() + 25, p);
     }
-  }
+  }*/
 
   @Override
   public void surfaceCreated(android.view.SurfaceHolder s)
@@ -110,7 +118,6 @@ android.view.SurfaceHolder.Callback
 
   public void On_World_Init(rs.projecta.World w)
   {
-    this.world = w;
-    this.camera = w.player;
+    this.world_view.world = w;
   }
 }

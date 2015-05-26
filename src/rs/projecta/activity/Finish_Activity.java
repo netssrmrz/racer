@@ -16,7 +16,7 @@ android.widget.Button.OnClickListener
     
     super.onCreate(saved_state);
 
-    this.curr_level=rs.projecta.Util.Get_Level(this);
+    this.curr_level=rs.projecta.level.Level.Get(this);
     
     msg_view=new android.widget.TextView(this);
     msg_view.setText("Well Done!");

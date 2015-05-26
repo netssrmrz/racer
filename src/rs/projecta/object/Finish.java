@@ -35,18 +35,30 @@ implements Has_Position, Is_Drawable
     this.p.setColor(0xff0000ff);
   }
   
-  public void Draw(android.graphics.Canvas c)
+  public void Draw(rs.projecta.view.World_View v, android.graphics.Canvas c)
   {
     c.drawCircle(0, 0, 50, this.p);
   }
 
   public float Get_X()
   {
-    return this.body.getPosition().x*this.world.phys_scale;
+    return rs.projecta.Util.Get_Transform(this.world, this.body, 
+      rs.projecta.Util.TID_X);
   }
 
   public float Get_Y()
   {
-    return this.body.getPosition().y*this.world.phys_scale;
-	}
+    return rs.projecta.Util.Get_Transform(this.world, this.body, 
+      rs.projecta.Util.TID_Y);
+  }
+  
+  public void Set_X(float x)
+  {
+    rs.projecta.Util.Set_Transform(this.world, this.body, x, null, null);
+  }
+
+  public void Set_Y(float y)
+  {
+    rs.projecta.Util.Set_Transform(this.world, this.body, null, y, null);
+  }
 }

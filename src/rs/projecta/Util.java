@@ -2,24 +2,46 @@ package rs.projecta;
 
 public class Util
 {
-  public static rs.projecta.level.Level Get_Level(android.app.Activity a)
+  public static int TID_X=1;
+  public static int TID_Y=2;
+  public static int TID_A=3;
+  
+  public static void Set_Transform(
+    rs.projecta.World world, org.jbox2d.dynamics.Body body,
+    Float x, Float y, Float a)
   {
-    String class_name;
-    Class<? extends Object> level_class;
-    rs.projecta.level.Level res=null;
+    org.jbox2d.common.Vec2 curr_pos;
 
-    class_name=a.getIntent().getStringExtra("level_class");
-    try 
-    {
-      level_class=Class.forName(class_name);
-      res = (rs.projecta.level.Level)level_class.newInstance();
-    }
-    catch (Exception e) 
-    {
-      level_class=null;
-      res=null;
-    }
+    curr_pos=body.getPosition();
+    if (x==null)
+      x=curr_pos.x;
+    else
+      x=x/world.phys_scale;
+    if (y==null)
+      y=curr_pos.y;
+    else
+      y=y/world.phys_scale;
     
+    if (a!=null)
+      a=(float)java.lang.Math.toRadians(a);
+    else
+      a=body.getAngle();
+
+    body.setTransform(new org.jbox2d.common.Vec2(x, y), a);
+  }
+  
+  public static float Get_Transform(
+    rs.projecta.World world, org.jbox2d.dynamics.Body body, int id)
+  {
+    float res=0;
+    
+    if (id==TID_X)
+      res = body.getPosition().x*world.phys_scale;
+    else if (id==TID_Y)
+      res = body.getPosition().y*world.phys_scale;
+    else if (id==TID_A)
+      res = (float)java.lang.Math.toDegrees(body.getAngle());
+      
     return res;
   }
 }

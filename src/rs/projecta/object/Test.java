@@ -51,7 +51,7 @@ implements Is_Drawable ,Has_Position
   }
 
   @Override
-  public void Draw(android.graphics.Canvas c)
+  public void Draw(rs.projecta.view.World_View v, android.graphics.Canvas c)
   {
     c.drawCircle(0, 0, this.radius+(this.frame/2), p);
     
@@ -66,5 +66,13 @@ implements Is_Drawable ,Has_Position
 	public float Get_Y()
   {
     return this.body.getPosition().y*this.world.phys_scale;
+  }
+  
+  public void Set_X(float x)
+  {
+  }
+
+  public void Set_Y(float y)
+  {
   }
 }

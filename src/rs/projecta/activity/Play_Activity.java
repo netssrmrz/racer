@@ -1,5 +1,6 @@
 package rs.projecta.activity;
 import rs.projecta.level.*;
+import rs.projecta.object.*;
 
 public class Play_Activity 
 extends android.app.Activity
@@ -17,6 +18,7 @@ implements
   public rs.projecta.Tilt_Manager tilt_man;
   public rs.projecta.World world;
   public rs.projecta.level.Level curr_level;
+  public rs.projecta.object.Player player;
 
   @Override
   public void onCreate(android.os.Bundle saved_state)
@@ -25,8 +27,9 @@ implements
     android.widget.LinearLayout main_layout, button_bar;
 
     //android.util.Log.d("Test_Activity.onCreate()", "Entered");
-    this.curr_level=rs.projecta.Util.Get_Level(this);
+    this.curr_level=rs.projecta.level.Level.Get(this);
     this.world=new rs.projecta.World(this, this.curr_level);
+    this.player=this.world.Get_Player();
     
     this.tilt_man=new rs.projecta.Tilt_Manager(this);
     this.tilt_man.tilt_event_listener=this;
@@ -99,21 +102,21 @@ implements
     if (v instanceof android.widget.Button)
     {
       if (v.getId()==BTNID_FW)
-        this.gfx_view.world.player.Accelerate(100);
+        this.player.Accelerate(100);
       if (v.getId()==BTNID_BW)
-        this.gfx_view.world.player.Accelerate(-100);
+        this.player.Accelerate(-100);
       if (v.getId()==BTNID_LT)
-        this.gfx_view.world.player.Turn(-100);
+        this.player.Turn(-100);
       if (v.getId()==BTNID_RT)
-        this.gfx_view.world.player.Turn(100);
+        this.player.Turn(100);
     }
   }
 
   public void On_Tilt_Changed(float[] o, float[] v, float[] d)
   {
-    this.gfx_view.world.player.User_Action(d[1], d[2]);
-    this.gfx_view.world.player.Accelerate(d[1]);    
-    this.gfx_view.world.player.Turn(d[2]);
+    this.player.User_Action(d[1], d[2]);
+    this.player.Accelerate(d[1]);    
+    this.player.Turn(d[2]);
   }
   
   @Override

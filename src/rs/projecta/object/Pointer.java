@@ -8,7 +8,7 @@ implements Is_Drawable, Has_Position, Has_Direction
   public rs.projecta.World world;
 
   public Pointer(rs.projecta.World world, 
-                 rs.projecta.object.Has_Position src, rs.projecta.object.Has_Position target)
+    rs.projecta.object.Has_Position src, rs.projecta.object.Has_Position target)
   {
     this.world = world;
     this.src = src;
@@ -18,7 +18,7 @@ implements Is_Drawable, Has_Position, Has_Direction
   }
 
   @Override
-  public void Draw(android.graphics.Canvas c)
+  public void Draw(rs.projecta.view.World_View v, android.graphics.Canvas c)
   {
     float tx, ty, x=0, y=0;
 
@@ -63,6 +63,14 @@ implements Is_Drawable, Has_Position, Has_Direction
   {
     return this.src.Get_Y();
   }
+  
+  public void Set_X(float x)
+  {
+  }
+
+  public void Set_Y(float y)
+  {
+  }
 
   public float Get_Angle_Degrees()
   {
@@ -73,5 +81,10 @@ implements Is_Drawable, Has_Position, Has_Direction
     a = -(float)Math.toDegrees(org.jbox2d.common.MathUtils.atan2(x, y));
 
     return a;
+  }
+  
+  public void Set_Angle_Degrees(float a)
+  {
+    
   }
 }

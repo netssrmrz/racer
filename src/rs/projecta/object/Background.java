@@ -6,24 +6,29 @@ implements Is_Drawable
 	public static final float TILE_SIZE=160;
 	
 	public android.graphics.Paint p;
-  public rs.projecta.object.Has_Position cam;
+  //public Object camera;
 
-	public Background(rs.projecta.object.Has_Position cam)
+	public Background()
 	{
 		this.p = new android.graphics.Paint();
 		this.p.setColor(0xff006600);
     
-    this.cam=cam;
+    //this.camera=camera;
 	}
   
-	public void Draw(android.graphics.Canvas c)
+	public void Draw(rs.projecta.view.World_View v, 
+    android.graphics.Canvas c)
 	{
-    float r, TILE_SIZE=50, x1, y1, x2, y2, x3, y3, x, y;
+    float r, TILE_SIZE=50, x1, y1, x2, y2, x3, y3, x=0, y=0;
 
     r=Distance(0, 0, c.getWidth(), c.getHeight())/2f;
     
-    x=cam.Get_X();
-    y=cam.Get_Y();
+    if (v.camera!=null && 
+      v.camera instanceof rs.projecta.object.Has_Position)
+    {
+      x=((rs.projecta.object.Has_Position)v.camera).Get_X();
+      y=((rs.projecta.object.Has_Position)v.camera).Get_Y();
+    }
     
     x1=x-r;
     y1=y-r;

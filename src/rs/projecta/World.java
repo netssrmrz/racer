@@ -1,4 +1,5 @@
 package rs.projecta;
+import rs.projecta.object.*;
 //import java.util.*;
 
 public class World
@@ -9,7 +10,7 @@ implements
   public org.jbox2d.dynamics.World phys_world;
   public float phys_scale;
   public String debug_msg;
-  public rs.projecta.object.Player player;
+  public rs.projecta.level.Level level;
   public static final int OBJ_COUNT=50;
   public Thread game_loop;
   public rs.projecta.World_Step_Listener world_step_listener;
@@ -71,15 +72,18 @@ implements
 
     this.phys_scale=20f;
     
-    this.player=new rs.projecta.object.Player(0, 0, this);
+    //this.player=new rs.projecta.object.Player(0, 0, this);
     
     this.objs=new java.util.ArrayList<Object>();
-    level.Build(this);
+    
+    this.level=level;
+    if (level!=null)
+      level.Build(this);
       
-    this.objs.add(this.player);
+    /*this.objs.add(this.player);
     this.objs.add(new rs.projecta.object.Background(this.player));
     this.objs.add(new rs.projecta.object.Pointer(
-      this, this.player, (rs.projecta.object.Has_Position)this.objs.get(0)));
+      this, this.player, (rs.projecta.object.Has_Position)this.objs.get(0)));*/
       
     if (this.world_step_listener!=null)
       this.world_step_listener.On_World_Init(this);
@@ -139,17 +143,69 @@ implements
     }
   }
   
-  /*public void Init_Level_One()
+  public rs.projecta.object.Player Get_Player()
   {
-    this.objs.add(new rs.projecta.object.Finish(this, 0, -3800));
+    rs.projecta.object.Player res=null;
     
-    this.objs.add(new rs.projecta.object.Wall(this, 0, -3900, 180, 10)); // top
-    this.objs.add(new rs.projecta.object.Wall(this, 200, -1900, 10, 2000)); // right
-    this.objs.add(new rs.projecta.object.Wall(this, -200, -1900, 10, 2000)); // left
-    this.objs.add(new rs.projecta.object.Wall(this, 0, 100, 180, 10)); // bottom
+    for (Object obj: this.objs)
+    {
+      if (obj instanceof rs.projecta.object.Player)
+      {
+        res=(rs.projecta.object.Player)obj;
+        break;
+      }
+    }
     
-    // int c;
-    //for (c=0; c<OBJ_COUNT; c++)
-      //this.objs.add(new rs.projecta.object.Test(this));
-  }*/
+    return res;
+  }
+  
+  public String Gen_Level_Script()
+  {
+    String s;
+    
+    s=
+      "package rs.projecta.level;\n\n"+
+      "public class ???\n"+
+      "extends Level\n"+
+      "{\n"+
+      "  @Override\n"+
+      "  public String Get_Next_Level()\n"+
+      "  {\n"+
+      "    return rs.projecta.level.???.class.getName();\n"+
+      "  }\n\n"+
+      "  @Override\n"+
+      "  public String Get_Title()\n"+
+      "  {\n"+
+      "    return \"???\";\n"+
+      "  }\n\n"+
+      "  @Override\n"+
+      "  public String Get_Description()\n"+
+      "  {\n"+
+      "    return \"???\";\n"+
+      "  }\n\n"+
+      "  @Override\n"+
+      "  public void Build(rs.projecta.World w)\n"+
+      "  {\n";
+      
+      for (Object obj: this.objs)
+      {
+        if (obj instanceof rs.projecta.object.Finish)
+        {
+          s+="    w.objs.add(new rs.projecta.object.Finish(w, "+
+            ((rs.projecta.object.Finish)obj).Get_X()+", "+
+            ((rs.projecta.object.Finish)obj).Get_Y()+"));\n";
+        }
+      }
+      /*w.objs.add(new rs.projecta.object.Finish(w, 0, -3800));
+      w.objs.add(new rs.projecta.object.Wall(w, 0, -3900, 180, 10, 0)); // top
+      w.objs.add(new rs.projecta.object.Wall(w, 200, -1900, 10, 2000, 0)); // right
+      w.objs.add(new rs.projecta.object.Wall(w, -200, -1900, 10, 2000, 0)); // left
+      w.objs.add(new rs.projecta.object.Wall(w, 0, 100, 180, 10, 0)); // bottom
+      w.objs.add(new rs.projecta.object.Player(0, 0, w));
+      w.objs.add(new rs.projecta.object.Background());*/
+    s=s+
+      "  }\n"+
+      "}\n";
+    return s;
+  }
 }

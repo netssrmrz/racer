@@ -359,7 +359,6 @@ public class Util
 	{
 		android.app.AlertDialog dlg;
 
-		//android.widget.Toast.makeText(ctx, msg, android.widget.Toast.LENGTH_LONG).show();
 		dlg = new android.app.AlertDialog.Builder(ctx).create();
 		dlg.setTitle("Message");
 		dlg.setMessage(msg);
@@ -398,5 +397,20 @@ public class Util
 		e.printStackTrace(stream);
 
 		rs.android.ui.Util.Show_Message(ctx, buffer.toString());
+	}
+  
+  public static void Show_Text(android.content.Context ctx, String msg)
+  {
+    android.app.AlertDialog dlg;
+    android.widget.EditText text;
+
+    text=new android.widget.EditText(ctx);
+    text.setText(msg);
+    text.setLines(10);
+    
+    dlg = new android.app.AlertDialog.Builder(ctx).create();
+    dlg.setTitle("Text");
+    dlg.setView(text);
+    dlg.show();
 	}
 }
