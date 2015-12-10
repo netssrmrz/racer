@@ -5,9 +5,9 @@ implements Has_Position, Is_Drawable
 {
   public android.graphics.Paint p;
   public org.jbox2d.dynamics.Body body;
-  public rs.projecta.World world;
+  public rs.projecta.world.World world;
 
-  public Finish(rs.projecta.World world, float x, float y)
+  public Finish(rs.projecta.world.World world, float x, float y)
   {
     org.jbox2d.dynamics.BodyDef body_def;
     org.jbox2d.dynamics.FixtureDef fix_def;

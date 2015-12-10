@@ -17,7 +17,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
   public static final int BUTTONID_RRG=16;
   public static final int BUTTONID_SCR=17;
 
-  rs.projecta.World world;
+  rs.projecta.world.World world;
   rs.projecta.view.Design_View world_view;
   Object curr_obj, camera;
 
@@ -87,7 +87,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
     button.setId(BUTTONID_SCR);
     button_bar.addView(button);
     
-    world = new rs.projecta.World(null, new rs.projecta.level.Editor_Level());
+    world = new rs.projecta.world.World(null, new rs.projecta.level.Editor_Level());
 
     world_view = new rs.projecta.view.Design_View(this, world);
 
@@ -128,7 +128,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
         ((rs.projecta.object.Has_Position)this.camera).Get_X(), 
         ((rs.projecta.object.Has_Position)this.camera).Get_Y(), 
         200, 10, 0);
-      this.world.objs.add(this.curr_obj);
+      this.world.objs.Add(this.curr_obj);
       this.world_view.camera = this.curr_obj;
     }
     else if (button.getId() == BUTTONID_FWD)
@@ -188,7 +188,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
           ((rs.projecta.object.Has_Position)this.camera).Get_X(), 
           ((rs.projecta.object.Has_Position)this.camera).Get_Y(), 
           200, 10, 0);
-        this.world.objs.add(this.curr_obj);
+        this.world.objs.Add(this.curr_obj);
         this.world_view.camera = this.curr_obj;
       }
       else if (selected.equals("Small Wall"))
@@ -198,7 +198,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
           ((rs.projecta.object.Has_Position)this.camera).Get_X(), 
           ((rs.projecta.object.Has_Position)this.camera).Get_Y(), 
           100, 10, 0);
-        this.world.objs.add(this.curr_obj);
+        this.world.objs.Add(this.curr_obj);
         this.world_view.camera = this.curr_obj;
       }
       else if (selected.equals("Player"))
@@ -207,7 +207,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
           ((rs.projecta.object.Has_Position)this.camera).Get_X(), 
           ((rs.projecta.object.Has_Position)this.camera).Get_Y(), 
           this.world);
-        this.world.objs.add(this.curr_obj);
+        this.world.objs.Add(this.curr_obj);
         this.world_view.camera = this.curr_obj;
       }
       else if (selected.equals("Goal"))
@@ -216,7 +216,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
           this.world,
           ((rs.projecta.object.Has_Position)this.camera).Get_X(), 
           ((rs.projecta.object.Has_Position)this.camera).Get_Y());
-        this.world.objs.add(this.curr_obj);
+        this.world.objs.Add(this.curr_obj);
         this.world_view.camera = this.curr_obj;
       }
       

@@ -7,7 +7,7 @@ public class Util
   public static int TID_A=3;
   
   public static void Set_Transform(
-    rs.projecta.World world, org.jbox2d.dynamics.Body body,
+    rs.projecta.world.World world, org.jbox2d.dynamics.Body body,
     Float x, Float y, Float a)
   {
     org.jbox2d.common.Vec2 curr_pos;
@@ -31,7 +31,7 @@ public class Util
   }
   
   public static float Get_Transform(
-    rs.projecta.World world, org.jbox2d.dynamics.Body body, int id)
+    rs.projecta.world.World world, org.jbox2d.dynamics.Body body, int id)
   {
     float res=0;
     

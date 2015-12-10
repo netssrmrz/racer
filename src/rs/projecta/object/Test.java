@@ -5,11 +5,11 @@ implements Is_Drawable ,Has_Position
 {
   public org.jbox2d.dynamics.Body body;
   public android.graphics.Paint p;
-  public rs.projecta.World world;
+  public rs.projecta.world.World world;
   public float radius;
   int frame;
   
-  public Test(rs.projecta.World world)
+  public Test(rs.projecta.world.World world)
   {
     org.jbox2d.dynamics.BodyDef body_def;
     org.jbox2d.dynamics.FixtureDef fix_def;

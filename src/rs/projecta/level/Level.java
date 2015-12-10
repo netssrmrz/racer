@@ -15,7 +15,7 @@ public class Level
     return null;
   }
   
-  public void Build(rs.projecta.World w)
+  public void Build(rs.projecta.world.World w)
   {
     
   }
@@ -71,6 +71,11 @@ public class Level
     }
 
     return res;
+  }
+  
+  public void Update()
+  {
+    
   }
   
   /*public float Get_Camera_X()

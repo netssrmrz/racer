@@ -5,9 +5,9 @@ implements Is_Drawable, Has_Position, Has_Direction
 {
   public rs.projecta.object.Has_Position src, trg;
   public android.graphics.Paint p;
-  public rs.projecta.World world;
+  public rs.projecta.world.World world;
 
-  public Pointer(rs.projecta.World world, 
+  public Pointer(rs.projecta.world.World world, 
     rs.projecta.object.Has_Position src, rs.projecta.object.Has_Position target)
   {
     this.world = world;

@@ -1,6 +1,4 @@
-package rs.projecta;
-import rs.projecta.object.*;
-//import java.util.*;
+package rs.projecta.world;
 
 public class World
 implements 
@@ -10,13 +8,15 @@ implements
   public org.jbox2d.dynamics.World phys_world;
   public float phys_scale;
   public String debug_msg;
+  public boolean debug;
   public rs.projecta.level.Level level;
   public static final int OBJ_COUNT=50;
   public Thread game_loop;
-  public rs.projecta.World_Step_Listener world_step_listener;
-  public java.util.ArrayList<Object> objs; //, del_objs;
+  public rs.projecta.world.World_Step_Listener world_step_listener;
+  public rs.projecta.world.Object_List objs;
   public int state;
   public boolean do_processing;
+  public java.util.Random rnd;
   
   public static final int STATE_STOP=0;
   public static final int STATE_PLAY=1;
@@ -24,10 +24,12 @@ implements
   public static final int STATE_QUIT=3;
   public static final int STATE_DIE=4;
   
-  public World(rs.projecta.World_Step_Listener l, rs.projecta.level.Level level)
+  public World(rs.projecta.world.World_Step_Listener l, rs.projecta.level.Level level)
   {
+    this.rnd=new java.util.Random(0);
     this.world_step_listener=l;
     this.Init_Level(level);
+    //this.debug=true;
   }
 
   public void beginContact(org.jbox2d.dynamics.contacts.Contact c)
@@ -69,21 +71,13 @@ implements
     this.phys_world=new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,0));
     this.phys_world.setAllowSleep(true);
     this.phys_world.setContactListener(this);
-
+    
     this.phys_scale=20f;
-    
-    //this.player=new rs.projecta.object.Player(0, 0, this);
-    
-    this.objs=new java.util.ArrayList<Object>();
+    this.objs=new rs.projecta.world.Object_List(this);
     
     this.level=level;
     if (level!=null)
       level.Build(this);
-      
-    /*this.objs.add(this.player);
-    this.objs.add(new rs.projecta.object.Background(this.player));
-    this.objs.add(new rs.projecta.object.Pointer(
-      this, this.player, (rs.projecta.object.Has_Position)this.objs.get(0)));*/
       
     if (this.world_step_listener!=null)
       this.world_step_listener.On_World_Init(this);
@@ -100,18 +94,11 @@ implements
       
       if (this.world_step_listener!=null)
         this.world_step_listener.On_World_Step(this);
+      
+      if (this.level!=null)
+        this.level.Update();
         
-      /*if (rs.android.Util.NotEmpty(this.del_objs))
-      {
-        for (Object obj: this.del_objs)
-        {
-          this.objs.remove(obj);
-          if (obj instanceof rs.projecta.object.Has_Physics)
-            this.phys_world.destroyBody(
-              ((rs.projecta.object.Has_Physics)obj).Get_Body());
-        }
-        this.del_objs.clear();
-      }*/
+      this.objs.Process();
     }
     
     if (this.state==STATE_LEVELCOMPLETE)
@@ -143,22 +130,6 @@ implements
     }
   }
   
-  public rs.projecta.object.Player Get_Player()
-  {
-    rs.projecta.object.Player res=null;
-    
-    for (Object obj: this.objs)
-    {
-      if (obj instanceof rs.projecta.object.Player)
-      {
-        res=(rs.projecta.object.Player)obj;
-        break;
-      }
-    }
-    
-    return res;
-  }
-  
   public String Gen_Level_Script()
   {
     String s;
@@ -187,7 +158,7 @@ implements
       "  public void Build(rs.projecta.World w)\n"+
       "  {\n";
       
-      for (Object obj: this.objs)
+      for (Object obj: this.objs.objs)
       {
         if (obj instanceof rs.projecta.object.Finish)
         {

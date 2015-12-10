@@ -22,10 +22,10 @@ extends Level
   }*/
 
   @Override
-  public void Build(rs.projecta.World w)
+  public void Build(rs.projecta.world.World w)
   {
     //this.camera=new rs.projecta.object.Camera(0, 0, null);
     
-    w.objs.add(new rs.projecta.object.Background());
+    w.objs.Add(new rs.projecta.object.Background_Grid());
   }
 }

@@ -3,6 +3,7 @@ import android.view.*;
 import android.widget.*;
 import android.graphics.drawable.*;
 import android.widget.GridLayout.*;
+import android.graphics.*;
 
 public class Util
 {
@@ -413,4 +414,24 @@ public class Util
     dlg.setView(text);
     dlg.show();
 	}
+  
+  public static android.graphics.PointF Rotate
+    (float x, float y, float tx, float ty, float a)
+  {
+    android.graphics.PointF res;
+    android.graphics.Matrix m;
+    float[] pts;
+    
+    pts=new float[2];
+    pts[0]=x;
+    pts[1]=y;
+    
+    m=new android.graphics.Matrix();
+    m.setTranslate(tx, ty);
+    m.postRotate(a, x, y);
+    m.mapPoints(pts);
+    
+    res=new android.graphics.PointF(pts[0], pts[1]);
+    return res;
+  }
 }

@@ -1,6 +1,6 @@
 package rs.projecta.object;
 
-public class Background
+public class Background_Grid
 implements Is_Drawable
 {
 	public static final float TILE_SIZE=160;
@@ -8,7 +8,7 @@ implements Is_Drawable
 	public android.graphics.Paint p;
   //public Object camera;
 
-	public Background()
+	public Background_Grid()
 	{
 		this.p = new android.graphics.Paint();
 		this.p.setColor(0xff006600);

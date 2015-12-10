@@ -3,6 +3,9 @@ package rs.projecta.level;
 public class Tutorial_Forward
 extends Level
 {
+  public rs.projecta.object.Player player;
+  public rs.projecta.world.World w;
+  
   @Override
   public String Get_Next_Level()
   {
@@ -12,31 +15,53 @@ extends Level
   @Override
   public String Get_Title()
   {
-    return "Stumble Home";
+    return "Learn to Steer";
   }
   
   @Override
   public String Get_Description()
   {
-    return "Big night. Thankfully the way home is straight.";
+    return "Tilt the device left and right to steer to the blue circle.";
   }
   
   @Override
-  public void Build(rs.projecta.World w)
+  public void Build(rs.projecta.world.World w)
   {
     rs.projecta.object.Finish finish;
-    rs.projecta.object.Player player;
+
+    player = new rs.projecta.object.Player(0, -20, w);
+    finish = new rs.projecta.object.Finish(w, 0, -3800);
+    this.w=w;
+
+    w.objs.Add(new rs.projecta.object.Background_Grid());
+    w.objs.Add(finish);
+    w.objs.Add(player);
+
+    this.Add_Start_Walls(0);
+    this.Add_Walls(1000);
+  }
+  
+  public void Add_Walls(float trg_pos)
+  {
+    this.w.objs.Add(new rs.projecta.object.Wall(
+      this.w, 500, trg_pos, 20, 500, 0f));
+    this.w.objs.Add(new rs.projecta.object.Wall(
+      this.w, -500, trg_pos, 20, 500, 0f));
+  }
+  
+  public void Add_Start_Walls(float trg_pos)
+  {
+    this.w.objs.Add(new rs.projecta.object.Wall(
+      this.w, 500, -500, 20, 500, 0f));
+    this.w.objs.Add(new rs.projecta.object.Wall(
+      this.w, -500, -500, 20, 500, 0f));
+    this.w.objs.Add(new rs.projecta.object.Wall(
+      this.w, 00, trg_pos, 500, 20, 0f));
+  }
+  
+  @Override
+  public void Update()
+  {
     
-    player=new rs.projecta.object.Player(0, 0, w);
-    finish=new rs.projecta.object.Finish(w, 0, -3800);
-    
-    w.objs.add(finish);
-    w.objs.add(new rs.projecta.object.Wall(w, 0, -3900, 180, 10, 0)); // top
-    w.objs.add(new rs.projecta.object.Wall(w, 200, -1900, 10, 2000, 0)); // right
-    w.objs.add(new rs.projecta.object.Wall(w, -200, -1900, 10, 2000, 0)); // left
-    w.objs.add(new rs.projecta.object.Wall(w, 0, 100, 180, 10, 0)); // bottom
-    w.objs.add(player);
-    w.objs.add(new rs.projecta.object.Background());
-    w.objs.add(new rs.projecta.object.Pointer(w, player, finish));
   }
 }

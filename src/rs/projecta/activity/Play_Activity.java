@@ -1,22 +1,22 @@
 package rs.projecta.activity;
-import rs.projecta.level.*;
-import rs.projecta.object.*;
+//import rs.projecta.level.*;
+//import rs.projecta.object.*;
 
 public class Play_Activity 
 extends android.app.Activity
 implements 
-  android.widget.Button.OnClickListener,
+  //android.widget.Button.OnClickListener,
   rs.projecta.Tilt_Event_Listener,
-  rs.projecta.World_Step_Listener
+  rs.projecta.world.World_Step_Listener
 {
-  public static final int BTNID_FW=1;
+  /*public static final int BTNID_FW=1;
   public static final int BTNID_BW=2;
   public static final int BTNID_RT=3;
-  public static final int BTNID_LT=4;
+  public static final int BTNID_LT=4;*/
 
   public rs.projecta.view.Game_View gfx_view;
   public rs.projecta.Tilt_Manager tilt_man;
-  public rs.projecta.World world;
+  public rs.projecta.world.World world;
   public rs.projecta.level.Level curr_level;
   public rs.projecta.object.Player player;
 
@@ -24,36 +24,43 @@ implements
   public void onCreate(android.os.Bundle saved_state)
   {
     super.onCreate(saved_state);
-    android.widget.LinearLayout main_layout, button_bar;
+    //android.widget.LinearLayout main_layout, button_bar;
 
     //android.util.Log.d("Test_Activity.onCreate()", "Entered");
+    this.getWindow().addFlags(
+      android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    this.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+    this.getWindow().setFlags(
+      android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,
+      android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+      
     this.curr_level=rs.projecta.level.Level.Get(this);
-    this.world=new rs.projecta.World(this, this.curr_level);
-    this.player=this.world.Get_Player();
+    this.world=new rs.projecta.world.World(this, this.curr_level);
+    this.player=this.world.objs.Get_Player();
     
     this.tilt_man=new rs.projecta.Tilt_Manager(this);
     this.tilt_man.tilt_event_listener=this;
     
-    main_layout = new android.widget.LinearLayout(this);
-    main_layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+    /*main_layout = new android.widget.LinearLayout(this);
+    main_layout.setOrientation(android.widget.LinearLayout.VERTICAL);*/
     
     this.gfx_view = new rs.projecta.view.Game_View(this, this.world);
-    main_layout.addView(this.gfx_view, 
+    /*main_layout.addView(this.gfx_view, 
       new android.widget.LinearLayout.LayoutParams(
-        android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 0, 90f));
+        android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 0, 90f));*/
 
-    button_bar=this.Get_Button_Bar();
+    /*button_bar=this.Get_Button_Bar();
     main_layout.addView(button_bar, 
       new android.widget.LinearLayout.LayoutParams(
-        android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 0, 10f));
+        android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 0, 10f));*/
         
-    this.setContentView(main_layout, 
+    this.setContentView(gfx_view, 
       new android.widget.LinearLayout.LayoutParams(
         android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
 				android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1f));
   }
 
-  public android.widget.LinearLayout Get_Button_Bar()
+  /*public android.widget.LinearLayout Get_Button_Bar()
   {
     android.widget.LinearLayout main_layout;
     android.widget.Button button;
@@ -94,9 +101,9 @@ implements
         0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 5f));
     
     return main_layout;
-  }
+  }*/
   
-  @Override
+  /*@Override
   public void onClick(android.view.View v)
   {
     if (v instanceof android.widget.Button)
@@ -110,12 +117,12 @@ implements
       if (v.getId()==BTNID_RT)
         this.player.Turn(100);
     }
-  }
+  }*/
 
   public void On_Tilt_Changed(float[] o, float[] v, float[] d)
   {
     this.player.User_Action(d[1], d[2]);
-    this.player.Accelerate(d[1]);    
+    //this.player.Accelerate(d[1]);    
     this.player.Turn(d[2]);
   }
   
@@ -139,18 +146,18 @@ implements
     this.world.Stop_Loop();
   }
  
-  public void On_World_Step(rs.projecta.World w)
+  public void On_World_Step(rs.projecta.world.World w)
   {
     this.gfx_view.Draw_World_Step();
   }
 
-  public void On_World_Init(rs.projecta.World w)
+  public void On_World_Init(rs.projecta.world.World w)
   {
     if (this.gfx_view!=null)
       this.gfx_view.On_World_Init(w);
   }
   
-  public void On_World_Finish(rs.projecta.World w)
+  public void On_World_Finish(rs.projecta.world.World w)
   {
     //android.util.Log.d("On_World_Finish()", "Entered");
     android.content.Intent i;
