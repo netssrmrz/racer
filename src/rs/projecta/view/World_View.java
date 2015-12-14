@@ -11,7 +11,7 @@ extends android.view.View
   public World_View(android.content.Context context, rs.projecta.world.World world)
   {
     super(context);
-    this.world=world;
+    this.Init(world);
 
     if (this.world.debug)
     {
@@ -22,6 +22,12 @@ extends android.view.View
     this.p = new android.graphics.Paint();
     this.p.setColor(0xffffffff);
     this.p.setTextSize(20f);
+  }
+  
+  public void Init(rs.projecta.world.World w)
+  {
+    this.world = w;
+    this.camera = w.objs.Get_Player();
   }
   
   public float Get_Camera_X()

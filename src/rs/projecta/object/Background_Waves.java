@@ -1,6 +1,6 @@
 package rs.projecta.object;
 
-public class Background_Gradient
+public class Background_Waves
 implements Is_Drawable
 {
   public Has_Position cam;
@@ -11,7 +11,7 @@ implements Is_Drawable
   android.graphics.PointF curr_tile_pos;
   android.graphics.RectF rect;
   
-  public Background_Gradient(Has_Position cam, float height, int col)
+  public Background_Waves(Has_Position cam, float height, int col)
   { 
     curr_tile_index=new android.graphics.Point();
     curr_tile_pos=new android.graphics.PointF();

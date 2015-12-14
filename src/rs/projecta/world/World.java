@@ -17,12 +17,13 @@ implements
   public int state;
   public boolean do_processing;
   public java.util.Random rnd;
+  public long last_update, lapsed_time;
   
   public static final int STATE_STOP=0;
   public static final int STATE_PLAY=1;
   public static final int STATE_LEVELCOMPLETE=2;
   public static final int STATE_QUIT=3;
-  public static final int STATE_DIE=4;
+  public static final int STATE_LEVELFAIL=4;
   
   public World(rs.projecta.world.World_Step_Listener l, rs.projecta.level.Level level)
   {
@@ -32,9 +33,14 @@ implements
     //this.debug=true;
   }
 
+  public void Level_Fail()
+  {
+    this.do_processing = false;
+    this.state = rs.projecta.world.World.STATE_LEVELFAIL;
+  }
+  
   public void beginContact(org.jbox2d.dynamics.contacts.Contact c)
   {
-    org.jbox2d.dynamics.Fixture a, b;
     Object obj;
     
     obj=c.getFixtureA().getBody().getUserData();
@@ -65,8 +71,15 @@ implements
   
   public void Init_Level(rs.projecta.level.Level level)
   {
+    this.level=level;
+    this.Init_Level();
+  }
+  
+  public void Init_Level()
+  {
     //android.util.Log.d("Init_Level()", "Entered");
     
+    this.last_update=0;
     this.state=STATE_PLAY; 
     this.phys_world=new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,0));
     this.phys_world.setAllowSleep(true);
@@ -75,9 +88,8 @@ implements
     this.phys_scale=20f;
     this.objs=new rs.projecta.world.Object_List(this);
     
-    this.level=level;
-    if (level!=null)
-      level.Build(this);
+    if (this.level!=null)
+      this.level.Build(this);
       
     if (this.world_step_listener!=null)
       this.world_step_listener.On_World_Init(this);
@@ -85,29 +97,34 @@ implements
   
   public void run()
   {
-    //android.util.Log.d("run()", "Entered");
+    long now;
+    //android.util.Log.d("World.run()", "Entered");
     
     this.do_processing=true;
     while (this.do_processing)
     {
+      now=System.nanoTime();
+      this.lapsed_time=now-this.last_update;
+      this.last_update=now;
+      
       this.phys_world.step(0.01f, 8, 8);
       
       if (this.world_step_listener!=null)
-        this.world_step_listener.On_World_Step(this);
+        this.world_step_listener.On_World_Step(this); // draw
       
       if (this.level!=null)
         this.level.Update();
         
-      this.objs.Process();
-    }
-    
-    if (this.state==STATE_LEVELCOMPLETE)
-    {
-      if (this.world_step_listener!=null)
-        this.world_step_listener.On_World_Finish(this);
+      this.objs.Process(); // remove and update
     }
     
     this.game_loop=null;
+    if (this.state==STATE_LEVELCOMPLETE || this.state==STATE_LEVELFAIL)
+    {
+      android.util.Log.d("World.run()", "Run loop terminated.");
+      if (this.world_step_listener!=null)
+        this.world_step_listener.On_World_Finish(this);
+    }
   }
 
   public void Start_Loop()

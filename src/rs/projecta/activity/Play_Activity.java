@@ -1,19 +1,11 @@
 package rs.projecta.activity;
-//import rs.projecta.level.*;
-//import rs.projecta.object.*;
 
 public class Play_Activity 
 extends android.app.Activity
 implements 
-  //android.widget.Button.OnClickListener,
   rs.projecta.Tilt_Event_Listener,
   rs.projecta.world.World_Step_Listener
 {
-  /*public static final int BTNID_FW=1;
-  public static final int BTNID_BW=2;
-  public static final int BTNID_RT=3;
-  public static final int BTNID_LT=4;*/
-
   public rs.projecta.view.Game_View gfx_view;
   public rs.projecta.Tilt_Manager tilt_man;
   public rs.projecta.world.World world;
@@ -24,7 +16,6 @@ implements
   public void onCreate(android.os.Bundle saved_state)
   {
     super.onCreate(saved_state);
-    //android.widget.LinearLayout main_layout, button_bar;
 
     //android.util.Log.d("Test_Activity.onCreate()", "Entered");
     this.getWindow().addFlags(
@@ -36,89 +27,18 @@ implements
       
     this.curr_level=rs.projecta.level.Level.Get(this);
     this.world=new rs.projecta.world.World(this, this.curr_level);
-    this.player=this.world.objs.Get_Player();
     
     this.tilt_man=new rs.projecta.Tilt_Manager(this);
     this.tilt_man.tilt_event_listener=this;
     
-    /*main_layout = new android.widget.LinearLayout(this);
-    main_layout.setOrientation(android.widget.LinearLayout.VERTICAL);*/
-    
     this.gfx_view = new rs.projecta.view.Game_View(this, this.world);
-    /*main_layout.addView(this.gfx_view, 
-      new android.widget.LinearLayout.LayoutParams(
-        android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 0, 90f));*/
-
-    /*button_bar=this.Get_Button_Bar();
-    main_layout.addView(button_bar, 
-      new android.widget.LinearLayout.LayoutParams(
-        android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 0, 10f));*/
         
     this.setContentView(gfx_view, 
       new android.widget.LinearLayout.LayoutParams(
         android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
 				android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1f));
   }
-
-  /*public android.widget.LinearLayout Get_Button_Bar()
-  {
-    android.widget.LinearLayout main_layout;
-    android.widget.Button button;
-    
-    main_layout=new android.widget.LinearLayout(this);
-    main_layout.setOrientation(android.widget.LinearLayout.HORIZONTAL);
-    
-    button = new android.widget.Button(this);
-    button.setId(BTNID_FW);
-    button.setText("Forward");
-    button.setOnClickListener(this);
-    main_layout.addView(button, 
-      new android.widget.LinearLayout.LayoutParams(
-        0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 5f));
-
-    button = new android.widget.Button(this);
-    button.setId(BTNID_BW);
-    button.setText("Backward");
-    button.setOnClickListener(this);
-    main_layout.addView(button, 
-      new android.widget.LinearLayout.LayoutParams(
-        0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 5f));
-
-    button = new android.widget.Button(this);
-    button.setId(BTNID_LT);
-    button.setText("Left");
-    button.setOnClickListener(this);
-    main_layout.addView(button, 
-      new android.widget.LinearLayout.LayoutParams(
-        0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 5f));
-
-    button = new android.widget.Button(this);
-    button.setId(BTNID_RT);
-    button.setText("Right");
-    button.setOnClickListener(this);
-    main_layout.addView(button, 
-      new android.widget.LinearLayout.LayoutParams(
-        0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 5f));
-    
-    return main_layout;
-  }*/
   
-  /*@Override
-  public void onClick(android.view.View v)
-  {
-    if (v instanceof android.widget.Button)
-    {
-      if (v.getId()==BTNID_FW)
-        this.player.Accelerate(100);
-      if (v.getId()==BTNID_BW)
-        this.player.Accelerate(-100);
-      if (v.getId()==BTNID_LT)
-        this.player.Turn(-100);
-      if (v.getId()==BTNID_RT)
-        this.player.Turn(100);
-    }
-  }*/
-
   public void On_Tilt_Changed(float[] o, float[] v, float[] d)
   {
     this.player.User_Action(d[1], d[2]);
@@ -154,17 +74,27 @@ implements
   public void On_World_Init(rs.projecta.world.World w)
   {
     if (this.gfx_view!=null)
-      this.gfx_view.On_World_Init(w);
+      this.gfx_view.world_view.Init(w);
+    this.player=w.objs.Get_Player();
   }
   
   public void On_World_Finish(rs.projecta.world.World w)
   {
-    //android.util.Log.d("On_World_Finish()", "Entered");
+    android.util.Log.d("Play_Activity.On_World_Finish()", "Entered");
     android.content.Intent i;
 
-    i=new android.content.Intent(this, rs.projecta.activity.Finish_Activity.class);
-    i.setFlags(android.content.Intent.FLAG_ACTIVITY_NO_HISTORY);
-    i.putExtra("level_class", this.curr_level.getClass().getName());
-    this.startActivity(i);
+    if (w.state==rs.projecta.world.World.STATE_LEVELCOMPLETE)
+    {
+      i=new android.content.Intent(this, rs.projecta.activity.Finish_Activity.class);
+      i.setFlags(android.content.Intent.FLAG_ACTIVITY_NO_HISTORY);
+      i.putExtra("level_class", this.curr_level.getClass().getName());
+      this.startActivity(i);
+    }
+    else if (w.state==rs.projecta.world.World.STATE_LEVELFAIL)
+    {
+      android.util.Log.d("Play_Activity.On_World_Finish()", "STate level fail");
+      this.world.Init_Level();
+      this.world.Start_Loop();
+    }
   }
 }

@@ -11,7 +11,6 @@ extends Level
   @Override
   public String Get_Next_Level()
   {
-    //return rs.projecta.level.Tutorial_Forward.class.getName();
     return null;
   }
 
@@ -31,29 +30,23 @@ extends Level
   @Override
   public void Build(rs.projecta.world.World w)
   {
-    //rs.projecta.object.Finish finish;
-    rs.projecta.object.Background_Gradient bd, bd2, bd3;
+    rs.projecta.object.Background_Waves bd, bd2, bd3;
 
-    player = new rs.projecta.object.Player(0, 0, w);
-    bd=new rs.projecta.object.Background_Gradient(this.player, 1.2f, 0xff0000ff);
-    bd2=new rs.projecta.object.Background_Gradient(this.player, 1.4f, 0xff0000cc);
-    bd3=new rs.projecta.object.Background_Gradient(this.player, 1.6f, 0xff000088);
-    //finish = new rs.projecta.object.Finish(w, 0, -3800);
+    player = new rs.projecta.object.Player(0, -100, w);
+    bd=new rs.projecta.object.Background_Waves(this.player, 1.2f, 0xff0000ff);
+    bd2=new rs.projecta.object.Background_Waves(this.player, 1.4f, 0xff0000cc);
+    bd3=new rs.projecta.object.Background_Waves(this.player, 1.6f, 0xff000088);
     
     this.trg_step = 1000;
-    this.trg_pos = 0; //-this.trg_step;
+    this.trg_pos = 0; 
     this.w = w;
     this.score = 0;
-    //this.rnd=new java.util.Random(0);
 
-    //w.objs.add(new rs.projecta.object.Background());
-    //w.objs.add(finish);
     w.objs.Add(bd3);
     w.objs.Add(bd2);
     w.objs.Add(bd);
     w.objs.Add(player);
 
-    //this.Add_Start_Walls(0);
     this.Add_Walls(trg_step);
     this.Close_Door();
   }
@@ -67,8 +60,6 @@ extends Level
       this.Add_Walls(this.trg_pos);
       this.trg_pos -= this.trg_step;
 
-      //android.util.Log.d("Update", "Wall Count: "+
-      //this.w.objs.Get_Count(rs.projecta.object.Flappy_Wall.class));
       if (this.w.objs.Get_Count(rs.projecta.object.Flappy_Wall.class) > 3)
       {
         this.Remove_Walls();

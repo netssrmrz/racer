@@ -1,15 +1,11 @@
 package rs.projecta.object;
-//import android.graphics.*;
-//import android.graphics.*;
-//import rs.projecta.view.*;
-//import android.graphics.*;
 
 public class Score
 implements Is_Drawable
 {
-  public rs.projecta.world.World world;
+  public rs.projecta.world.World w;
   public android.graphics.Paint p, p1, p2;
-  public int frame_no;
+  public float size, size_delta, size_max;
   public String text;
   public android.graphics.PointF pos;
   public Has_Position pos_obj;
@@ -19,8 +15,10 @@ implements Is_Drawable
 
   public Score(rs.projecta.world.World world, String text, Has_Position pos_obj)
   {
-    this.world = world;
-    this.frame_no = 0;
+    this.w = world;
+    this.size=0;
+    this.size_delta=8;
+    this.size_max=3000;
     this.text = text;
     this.pos = new android.graphics.PointF();
     this.pos_obj=pos_obj;
@@ -30,18 +28,10 @@ implements Is_Drawable
     this.p.setColor(0xff00ff00);
     this.p.setAntiAlias(false);
     this.p.setTextAlign(android.graphics.Paint.Align.CENTER);
-    //this.p.setTextSize(2048);
-    //this.p.setStrokeWidth(2);
-    
-    /*dst_rect=new android.graphics.RectF();
-    this.bitmap=android.graphics.Bitmap.createBitmap(10, 10, 
-      android.graphics.Bitmap.Config.ARGB_8888);
-    android.graphics.Canvas c=new android.graphics.Canvas(this.bitmap);
-    this.Draw_Text(c, text, 5, 5, 2, this.p);*/
   }
   
   // bitmap
-  public void xDraw(rs.projecta.view.World_View v, android.graphics.Canvas c)
+  /*public void xDraw(rs.projecta.view.World_View v, android.graphics.Canvas c)
   {
     float size=100;
 
@@ -58,50 +48,39 @@ implements Is_Drawable
     this.frame_no++;
     if (this.frame_no>100)
       this.world.objs.Remove(this);
-  }
+  }*/
   
   // canvas lines
-  public void xxDraw(rs.projecta.view.World_View v, android.graphics.Canvas c)
+  /*public void xxDraw(rs.projecta.view.World_View v, android.graphics.Canvas c)
   {
-    int alpha;
     float size=200;
     
     this.pos.x = this.pos_obj.Get_X();
     this.pos.y = this.pos_obj.Get_Y();
-    //size = 5f * (float)frame_no;
-
-    //alpha = (int)(-255f / 100f * (float)frame_no + 255f);
-    //this.p.setAlpha(alpha);
     
     this.Draw_Text(c, this.text, this.pos.x, this.pos.y, size, this.p);
     
     this.frame_no++;
-    //if (this.frame_no>100)
       this.world.objs.Remove(this);
-  }
+  }*/
 
   // canvas text
   public void Draw(rs.projecta.view.World_View v, android.graphics.Canvas c)
   {
-    //int alpha;
-    float size=500;
-    android.graphics.PointF pos;
-
-    this.pos.x = this.pos_obj.Get_X();
-    this.pos.y = this.pos_obj.Get_Y();
+    this.size=this.size+this.size_delta*((float)this.w.lapsed_time/1000000f);
+    if (this.size>this.size_max)
+    {
+      this.w.objs.Remove(this);
+    }
+    else
+    {
+      this.pos.x = this.pos_obj.Get_X();
+      this.pos.y = this.pos_obj.Get_Y();
+      this.p.setTextSize(size);
     
-    size = 150f * (float)frame_no;
-    this.p.setTextSize(size);
-    
-    //alpha = (int)(-255f / 100f * (float)frame_no + 255f);
-    //this.p.setAlpha(alpha);
-
-    pos = this.Calc_Text_Center(this.pos, this.p);
-    c.drawText(this.text, pos.x, pos.y, this.p);
-
-    this.frame_no++;
-    if (this.frame_no>20)
-      this.world.objs.Remove(this);
+      pos = this.Calc_Text_Center(this.pos, this.p);
+      c.drawText(this.text, pos.x, pos.y, this.p);
+    }
   }
   
   public android.graphics.PointF Calc_Text_Center(
@@ -120,7 +99,7 @@ implements Is_Drawable
     return res;
   }
   
-  public void Draw_Text
+  /*public void Draw_Text
     (android.graphics.Canvas canvas, String text, 
     float x, float y, float size, android.graphics.Paint p)
   {
@@ -134,15 +113,15 @@ implements Is_Drawable
       this.Draw_Digit(canvas, text.charAt(c), 
         start_pos+c*new_size, y, size, p);
     }
-  }
+  }*/
     
-  public void Draw_Digit
+  /*public void Draw_Digit
   (android.graphics.Canvas c, char text, 
    float x, float y, float size, android.graphics.Paint p)
   {
     c.save();
     c.translate(x, y);
-    //c.scale(size, size);
+    
     if (text=='1')
     {
       c.drawLine(0, 2f*size, 0, -2f*size, p);
@@ -213,5 +192,5 @@ implements Is_Drawable
     }
     
     c.restore();
-  }
+  }*/
 }

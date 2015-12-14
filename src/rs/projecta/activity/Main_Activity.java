@@ -4,18 +4,6 @@ public class Main_Activity
 extends android.app.Activity
 implements android.widget.Button.OnClickListener
 { 
-  public class Animate_Handler
-  extends android.os.Handler
-  {
-    android.view.View view;
-    
-    public void handleMessage (android.os.Message msg)
-    {
-      view.invalidate();
-      this.sendEmptyMessage(0);
-    }
-  }
-  
 	@Override
 	public void onCreate(android.os.Bundle saved_state)
 	{
@@ -23,7 +11,6 @@ implements android.widget.Button.OnClickListener
 		android.widget.Button button;
     rs.projecta.level.Level level=null;
     android.widget.LinearLayout.LayoutParams layout;
-    Animate_Handler handler;
     android.widget.LinearLayout list_view;
 
 		super.onCreate(saved_state);
@@ -33,6 +20,7 @@ implements android.widget.Button.OnClickListener
     list_view = new android.widget.LinearLayout(this);
     list_view.setOrientation(android.widget.LinearLayout.VERTICAL);
     list_view.setBackground(new rs.projecta.view.Wave_Drawable());
+    new rs.android.ui.Animate(list_view);
     
     text_view=new android.widget.TextView(this);
     text_view.setTextColor(0xff009900);
@@ -60,10 +48,6 @@ implements android.widget.Button.OnClickListener
         android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
         android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1f)
       );
-      
-    handler=new Animate_Handler();
-    handler.view=list_view;
-    handler.sendEmptyMessage(0); 
 	}
 
   @Override

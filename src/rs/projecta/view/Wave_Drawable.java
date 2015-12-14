@@ -4,7 +4,7 @@ public class Wave_Drawable
 extends android.graphics.drawable.Drawable
 implements rs.projecta.object.Has_Position
 {
-  public rs.projecta.object.Background_Gradient bk1, bk2, bk3, bk4;
+  public rs.projecta.object.Background_Waves bk1, bk2, bk3, bk4;
   public float[] pos;
   public android.graphics.Paint p;
   public android.graphics.Matrix mat;
@@ -16,10 +16,10 @@ implements rs.projecta.object.Has_Position
     this.pos[0]=1000;
     this.pos[1]=1000;
     
-    this.bk1=new rs.projecta.object.Background_Gradient(this, 1.2f, 0xff0000ff);
-    this.bk2=new rs.projecta.object.Background_Gradient(this, 1.4f, 0xff0000cc);
-    this.bk3=new rs.projecta.object.Background_Gradient(this, 1.6f, 0xff000088);
-    this.bk4=new rs.projecta.object.Background_Gradient(this, 1.8f, 0xff000044);
+    this.bk1=new rs.projecta.object.Background_Waves(this, 1.2f, 0xff0000ff);
+    this.bk2=new rs.projecta.object.Background_Waves(this, 1.4f, 0xff0000cc);
+    this.bk3=new rs.projecta.object.Background_Waves(this, 1.6f, 0xff000088);
+    this.bk4=new rs.projecta.object.Background_Waves(this, 1.8f, 0xff000044);
     
     this.p=new android.graphics.Paint();
     this.p.setStyle(android.graphics.Paint.Style.STROKE);

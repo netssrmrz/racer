@@ -13,9 +13,6 @@ android.view.SurfaceHolder.Callback
     super(ctx);
 
     this.world_view=new World_View(ctx, w);
-    this.world_view.camera=this.world_view.world.objs.Get_Player();
-    
-    this.On_World_Init(w);
   }
 
   @Override
@@ -23,7 +20,6 @@ android.view.SurfaceHolder.Callback
   {
     this.world_view.onDraw(c);
   }
-     
 
   @Override
   public void surfaceCreated(android.view.SurfaceHolder s)
@@ -51,7 +47,8 @@ android.view.SurfaceHolder.Callback
     this.surface = this.getHolder();
     if (this.surface != null)
     {
-      c = this.surface.lockCanvas();
+      try {c = this.surface.lockCanvas();}
+      catch(java.lang.Exception e) {c=null;}
       if (c != null)
       {
         this.onDraw(c);
@@ -60,8 +57,9 @@ android.view.SurfaceHolder.Callback
     }
 	}
 
-  public void On_World_Init(rs.projecta.world.World w)
+  /*public void On_World_Init(rs.projecta.world.World w)
   {
     this.world_view.world = w;
-  }
+    this.world_view.camera = w.objs.Get_Player();
+  }*/
 }
