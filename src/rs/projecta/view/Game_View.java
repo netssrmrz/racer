@@ -56,10 +56,4 @@ android.view.SurfaceHolder.Callback
       }
     }
 	}
-
-  /*public void On_World_Init(rs.projecta.world.World w)
-  {
-    this.world_view.world = w;
-    this.world_view.camera = w.objs.Get_Player();
-  }*/
 }

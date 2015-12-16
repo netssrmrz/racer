@@ -45,35 +45,78 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide,
     this.frames=new android.graphics.Path[(int)this.frame_max];
     
     this.frames[0]=new android.graphics.Path();
-    this.frames[0].moveTo(0, -20);
-    this.frames[0].lineTo(20, 20);
-    this.frames[0].lineTo(-20, 20);
-    this.frames[0].lineTo(0, -20);
+    this.frames[0].moveTo(0,-15);
+    this.frames[0].lineTo(5,-5);
+    this.frames[0].lineTo(10,0);
+    this.frames[0].lineTo(5,0);
+    this.frames[0].lineTo(0,15);
+    this.frames[0].lineTo(5,20);
+    this.frames[0].lineTo(-5,20);
+    this.frames[0].lineTo(0,15);
+    this.frames[0].lineTo(-5,0);
+    this.frames[0].lineTo(-10,0);
+    this.frames[0].lineTo(-5,-5);
+    this.frames[0].lineTo(0,-15);
     
     this.frames[1]=new android.graphics.Path();
-    this.frames[1].moveTo(0, -25);
-    this.frames[1].lineTo(20, 25);
-    this.frames[1].lineTo(-20, 25);
-    this.frames[1].lineTo(0, -25);
+    this.frames[1].moveTo(5,-15);
+    this.frames[1].lineTo(5,-5);
+    this.frames[1].lineTo(10,0);
+    this.frames[1].lineTo(5,0);
+    this.frames[1].lineTo(5,15);
+    this.frames[1].lineTo(10,20);
+    this.frames[1].lineTo(5,25);
+    this.frames[1].lineTo(5,15);
+    this.frames[1].lineTo(-5,0);
+    this.frames[1].lineTo(-10,0);
+    this.frames[1].lineTo(-5,-5);
+    this.frames[1].lineTo(5,-15);
     
     this.frames[2]=new android.graphics.Path();
-    this.frames[2].moveTo(0, -20);
-    this.frames[2].lineTo(20, 20);
-    this.frames[2].lineTo(-20, 20);
-    this.frames[2].lineTo(0, -20);
+    this.frames[2].moveTo(0,-15);
+    this.frames[2].lineTo(5,-5);
+    this.frames[2].lineTo(10,0);
+    this.frames[2].lineTo(5,0);
+    this.frames[2].lineTo(0,15);
+    this.frames[2].lineTo(5,20);
+    this.frames[2].lineTo(-5,20);
+    this.frames[2].lineTo(0,15);
+    this.frames[2].lineTo(-5,0);
+    this.frames[2].lineTo(-10,0);
+    this.frames[2].lineTo(-5,-5);
+    this.frames[2].lineTo(0,-15);
     
     this.frames[3]=new android.graphics.Path();
-    this.frames[3].moveTo(0, -15);
-    this.frames[3].lineTo(20, 15);
-    this.frames[3].lineTo(-20, 15);
-    this.frames[3].lineTo(0, -15);
+    this.frames[3].moveTo(-5,-15);
+    this.frames[3].lineTo(-5,-5);
+    this.frames[3].lineTo(-10,0);
+    this.frames[3].lineTo(-5,0);
+    this.frames[3].lineTo(-5,15);
+    this.frames[3].lineTo(-10,20);
+    this.frames[3].lineTo(-5,25);
+    this.frames[3].lineTo(-5,15);
+    this.frames[3].lineTo(5,0);
+    this.frames[3].lineTo(10,0);
+    this.frames[3].lineTo(5,-5);
+    this.frames[3].lineTo(-5,-15);
   }
 
 	public void Draw(rs.projecta.view.World_View v, android.graphics.Canvas c)
 	{
-    this.frame=this.frame+this.frame_delta*((float)this.w.lapsed_time/1000000f);
-    this.frame=this.frame%this.frame_max;
-    c.drawPath(this.frames[(int)this.frame], p);
+    if (this.w.debug)
+    {
+      c.drawCircle(0, 0, 10f, p);
+    }
+    else
+    {
+      this.frame=this.frame+this.frame_delta*((float)this.w.lapsed_time/1000000f);
+      this.frame=this.frame%this.frame_max;
+    
+      c.save();
+      c.scale(4f, 4f);
+      c.drawPath(this.frames[(int)this.frame], p);
+      c.restore();
+    }
   }
 
 	public float Get_X()
@@ -108,29 +151,16 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide,
 
   public void User_Action(float f, float t)
   {
-    this.w.debug_msg = "";
   }
 
 	public void Turn(float tilt)
 	{
     float curr_v, trgt_v, f=0;
-    String str;
 
     curr_v = this.body.getAngularVelocity();
     trgt_v = tilt * 20f;
     f = trgt_v - curr_v;
     this.body.applyTorque(f);
-
-    if (this.w.debug)
-    {
-      str =
-        "\nTilt: " + tilt + "\n" +
-        "Angle: "+this.body.getAngle()+"\n"+
-        "Current Velocity: " + curr_v + "\n" +
-        "Target Velocity: " + trgt_v + "\n" +
-        "Force: " + f;
-      this.w.debug_msg += str;
-    }
 	}
 
   public void Accelerate(float tilt)

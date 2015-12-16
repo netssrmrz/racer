@@ -7,10 +7,12 @@ extends android.view.View
   public rs.projecta.world.World world;
   public android.graphics.Paint p;
   public rs.projecta.Debug_Renderer debug_renderer;
+  public float scale;
   
   public World_View(android.content.Context context, rs.projecta.world.World world)
   {
     super(context);
+    this.scale=0;
     this.Init(world);
 
     if (this.world.debug)
@@ -21,7 +23,7 @@ extends android.view.View
     
     this.p = new android.graphics.Paint();
     this.p.setColor(0xffffffff);
-    this.p.setTextSize(20f);
+    this.p.setTextSize(40f);
   }
   
   public void Init(rs.projecta.world.World w)
@@ -56,9 +58,23 @@ extends android.view.View
   public void onDraw(android.graphics.Canvas c)
   {
     //android.util.Log.d("onDraw()", "Entry");
+    
+    if (this.world.debug)
+    {
+      this.world.debug_msg[0]="";
+      this.world.debug_msg[0]+="c.getWidth(): "+c.getWidth()+"\n";
+      this.world.debug_msg[0]+="c.getHeight(): "+c.getHeight()+"\n";
+    }
+    
+    if (this.scale==0)
+    {
+      this.scale=0.0003f*(c.getWidth()+c.getHeight())+0.0928f;
+    }
 
     c.save();
+    
     c.translate((float)c.getWidth() / 2f, (float)c.getHeight() / 2f);
+    c.scale(this.scale, this.scale);
     if (this.camera instanceof rs.projecta.object.Has_Direction)
       c.rotate(-((rs.projecta.object.Has_Direction)this.camera).Get_Angle_Degrees());
     if (this.camera instanceof rs.projecta.object.Has_Position)
@@ -67,7 +83,6 @@ extends android.view.View
         -((rs.projecta.object.Has_Position)this.camera).Get_Y());
 
     c.drawColor(0x44000000);
-    //c.drawColor(0xff000000);
     this.world.objs.Draw(this, c);
     
     if (this.debug_renderer!=null)
@@ -89,9 +104,19 @@ extends android.view.View
 
     if (rs.android.Util.NotEmpty(this.world.debug_msg))
     {
-      lines = this.world.debug_msg.split("\n");
-      for (l = 0; l < lines.length; l++)
-        c.drawText(lines[l], 5, l * p.getTextSize() + 25, p);
+      l=0;
+      for (String msg: this.world.debug_msg)
+      {
+        if (msg!=null)
+        {
+          lines = msg.split("\n");
+          for (String line: lines)
+          {
+            c.drawText(line, 5, l * p.getTextSize() + 25, p);
+            l++;
+          }
+        }
+      }
     }
   }
 }

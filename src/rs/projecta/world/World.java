@@ -7,10 +7,9 @@ implements
 {
   public org.jbox2d.dynamics.World phys_world;
   public float phys_scale;
-  public String debug_msg;
+  public String debug_msg[];
   public boolean debug;
   public rs.projecta.level.Level level;
-  public static final int OBJ_COUNT=50;
   public Thread game_loop;
   public rs.projecta.world.World_Step_Listener world_step_listener;
   public rs.projecta.world.Object_List objs;
@@ -27,7 +26,7 @@ implements
   
   public World(rs.projecta.world.World_Step_Listener l, rs.projecta.level.Level level)
   {
-    this.rnd=new java.util.Random(0);
+    this.debug_msg=new String[5];
     this.world_step_listener=l;
     this.Init_Level(level);
     //this.debug=true;
@@ -79,6 +78,7 @@ implements
   {
     //android.util.Log.d("Init_Level()", "Entered");
     
+    this.rnd=new java.util.Random(0);
     this.last_update=0;
     this.state=STATE_PLAY; 
     this.phys_world=new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,0));
@@ -98,6 +98,7 @@ implements
   public void run()
   {
     long now;
+    float sec_step;
     //android.util.Log.d("World.run()", "Entered");
     
     this.do_processing=true;
@@ -107,7 +108,9 @@ implements
       this.lapsed_time=now-this.last_update;
       this.last_update=now;
       
-      this.phys_world.step(0.01f, 8, 8);
+      //sec_step=this.lapsed_time/1600000000f;
+      sec_step=this.lapsed_time/1800000000f;
+      this.phys_world.step(sec_step, 8, 8);
       
       if (this.world_step_listener!=null)
         this.world_step_listener.On_World_Step(this); // draw
@@ -121,7 +124,6 @@ implements
     this.game_loop=null;
     if (this.state==STATE_LEVELCOMPLETE || this.state==STATE_LEVELFAIL)
     {
-      android.util.Log.d("World.run()", "Run loop terminated.");
       if (this.world_step_listener!=null)
         this.world_step_listener.On_World_Finish(this);
     }
@@ -143,7 +145,7 @@ implements
     if (this.game_loop != null)
     {
       this.do_processing=false;
-      try {this.game_loop.join();} catch(java.lang.Exception e){};
+      try {this.game_loop.join();} catch(java.lang.Exception e){}
     }
   }
   

@@ -11,6 +11,7 @@ implements
   public rs.projecta.world.World world;
   public rs.projecta.level.Level curr_level;
   public rs.projecta.object.Player player;
+  public float max_d, prev_d;
 
   @Override
   public void onCreate(android.os.Bundle saved_state)
@@ -18,6 +19,9 @@ implements
     super.onCreate(saved_state);
 
     //android.util.Log.d("Test_Activity.onCreate()", "Entered");
+    this.max_d=0;
+    this.prev_d=0;
+    
     this.getWindow().addFlags(
       android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     this.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
@@ -32,6 +36,8 @@ implements
     this.tilt_man.tilt_event_listener=this;
     
     this.gfx_view = new rs.projecta.view.Game_View(this, this.world);
+    
+    //com.google.android.gms.ads.AdView
         
     this.setContentView(gfx_view, 
       new android.widget.LinearLayout.LayoutParams(
@@ -41,7 +47,14 @@ implements
   
   public void On_Tilt_Changed(float[] o, float[] v, float[] d)
   {
-    this.player.User_Action(d[1], d[2]);
+    if (this.world.debug)
+    {
+      if (d[2]-this.prev_d>max_d)
+        max_d=d[2]-this.prev_d;
+      this.world.debug_msg[1] = "Tilt: " + d[2] + "\n";
+      this.world.debug_msg[1] += "max Tilt: " + max_d + "\n";
+    }
+    //this.player.User_Action(d[1], d[2]);
     //this.player.Accelerate(d[1]);    
     this.player.Turn(d[2]);
   }
@@ -80,7 +93,7 @@ implements
   
   public void On_World_Finish(rs.projecta.world.World w)
   {
-    android.util.Log.d("Play_Activity.On_World_Finish()", "Entered");
+    //android.util.Log.d("Play_Activity.On_World_Finish()", "Entered");
     android.content.Intent i;
 
     if (w.state==rs.projecta.world.World.STATE_LEVELCOMPLETE)
@@ -92,7 +105,6 @@ implements
     }
     else if (w.state==rs.projecta.world.World.STATE_LEVELFAIL)
     {
-      android.util.Log.d("Play_Activity.On_World_Finish()", "STate level fail");
       this.world.Init_Level();
       this.world.Start_Loop();
     }

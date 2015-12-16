@@ -44,7 +44,8 @@ implements Is_Drawable, Has_Position, Has_Direction, Has_Cleanup
     this.p = new android.graphics.Paint();
     this.p.setStyle(android.graphics.Paint.Style.STROKE);
     this.p.setColor(0xffffff00);
-    this.p.setPathEffect(new android.graphics.DiscretePathEffect(10, 10));
+    if (!this.world.debug)
+      this.p.setPathEffect(new android.graphics.DiscretePathEffect(10, 10));
     this.p.setAntiAlias(false);
     
     /*col1=android.graphics.Color.rgb(

@@ -14,7 +14,7 @@ implements Is_Drawable, Has_Position
     this.cx=cx;
     this.cy=cy;
     this.r_delta=3f;
-    this.r_max=2000f;
+    this.r_max=1500f;
     this.r=0;
     
     this.p=new android.graphics.Paint();
@@ -31,7 +31,7 @@ implements Is_Drawable, Has_Position
     if (r>r_max)
     {
       w.objs.Remove(this);
-      w.Level_Fail();
+      //w.Level_Fail();
     }
     else
     {

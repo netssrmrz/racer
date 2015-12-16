@@ -9,9 +9,12 @@ implements rs.projecta.object.Has_Position
   public android.graphics.Paint p;
   public android.graphics.Matrix mat;
   public long last_time;
+  public float text_size;
   
   public Wave_Drawable()
   {
+    this.text_size=0;
+    
     this.pos=new float[2];
     this.pos[0]=1000;
     this.pos[1]=1000;
@@ -23,10 +26,12 @@ implements rs.projecta.object.Has_Position
     
     this.p=new android.graphics.Paint();
     this.p.setStyle(android.graphics.Paint.Style.STROKE);
+    this.p.setStrokeWidth(1);
     this.p.setColor(0xffffff00);
     this.p.setTextSize(200);
     this.p.setTextAlign(android.graphics.Paint.Align.CENTER);
     this.p.setPathEffect(new android.graphics.DiscretePathEffect(10, 5));
+    this.p.setAntiAlias(false);
     
     this.mat=new android.graphics.Matrix();
   }
@@ -36,6 +41,12 @@ implements rs.projecta.object.Has_Position
   {
     long elapsed_time, now;
     
+    if (this.text_size==0)
+    {
+      this.text_size=c.getWidth()/6f;
+      this.p.setTextSize(this.text_size);
+    }
+    
     now=System.nanoTime();
     elapsed_time=(now-this.last_time)/1000000;
     this.last_time=now;
@@ -43,6 +54,7 @@ implements rs.projecta.object.Has_Position
     this.mat.setRotate(0.02f*elapsed_time);
     this.mat.mapPoints(this.pos);
 
+    c.drawColor(0xff000000);
     c.save();
     c.translate(c.getWidth()/2f-this.Get_X(), c.getHeight()/2f-this.Get_Y());
     
@@ -51,7 +63,7 @@ implements rs.projecta.object.Has_Position
     this.bk2.Draw(null, c);
     this.bk1.Draw(null, c);
     c.drawText("Coral Racer", this.Get_X(), this.Get_Y(), this.p);
-    
+ 
     c.restore();
   }
 
