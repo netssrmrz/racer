@@ -10,7 +10,7 @@ implements
   public org.jbox2d.dynamics.World phys_world;
   public float phys_scale;
   public String debug_msg[];
-  public boolean debug;
+  public boolean debug, prof;
   public rs.projecta.level.Level level;
   public Thread game_loop;
   public rs.projecta.world.World_Step_Listener world_step_listener;
@@ -35,6 +35,7 @@ implements
     rs.projecta.level.Level level)
   {
     //this.debug=true;
+    //this.prof=true;
     this.ctx=ctx;
     this.debug_msg=new String[5];
     this.world_step_listener=l;
@@ -134,7 +135,8 @@ implements
     float sec_step;
     //android.util.Log.d("World.run()", "Entered");
     
-    android.os.Debug.startMethodTracing("rs.projecta");
+    if (this.prof)
+      android.os.Debug.startMethodTracing("rs.projecta");
     
     this.do_processing=true;
     while (this.do_processing)
@@ -155,7 +157,8 @@ implements
       this.objs.Process(); // remove and update
     }
     
-    android.os.Debug.stopMethodTracing();
+    if (this.prof)
+      android.os.Debug.stopMethodTracing();
     
     this.game_loop=null;
     if (this.state==STATE_LEVELCOMPLETE || this.state==STATE_LEVELFAIL)
