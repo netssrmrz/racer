@@ -36,7 +36,7 @@ implements Is_Drawable, Has_Position, Has_Direction, Has_Cleanup
     {
       this.w1x = (wall_width - tot_width) / 2f;
       p = rs.android.ui.Util.Rotate(x, y, this.w1x, 0, a);
-      this.w1 = new Wall(world, p.x, p.y, wall_width / 2f, 20, a);
+      this.w1 = new Wall(world, p.x, p.y, wall_width / 2f, 40, a);
     }
 
     // right wall
@@ -45,14 +45,14 @@ implements Is_Drawable, Has_Position, Has_Direction, Has_Cleanup
     {
       this.w2_x = (tot_width - wall_width) / 2f;
       p = rs.android.ui.Util.Rotate(x, y, this.w2_x, 0, a);
-      this.w2 = new Wall(world, p.x, p.y, wall_width / 2f, 20, a);
+      this.w2 = new Wall(world, p.x, p.y, wall_width / 2f, 40, a);
     }
     
     // door
     wall_width = gap_width;
     this.door_x = gap_pos-tot_width/2f;
     p = rs.android.ui.Util.Rotate(x, y, this.door_x, 0, a);
-    this.door = new Wall(world, p.x, p.y, wall_width / 2f, 20, a);
+    this.door = new Wall(world, p.x, p.y, wall_width / 2f, 40, a);
     this.Open();
   }
 

@@ -15,12 +15,6 @@ extends android.view.View
     this.scale=0;
     this.Init(world);
 
-    if (this.world.debug)
-    {
-      this.debug_renderer = new rs.projecta.Debug_Renderer(this.world.phys_scale);
-      this.world.phys_world.setDebugDraw(this.debug_renderer);
-    }
-    
     this.p = new android.graphics.Paint();
     this.p.setColor(0xffffffff);
     this.p.setTextSize(40f);
@@ -30,6 +24,12 @@ extends android.view.View
   {
     this.world = w;
     this.camera = w.objs.Get_Player();
+    
+    if (this.world.debug)
+    {
+      this.debug_renderer = new rs.projecta.Debug_Renderer(this.world.phys_scale);
+      this.world.phys_world.setDebugDraw(this.debug_renderer);
+    }
   }
   
   public float Get_Camera_X()

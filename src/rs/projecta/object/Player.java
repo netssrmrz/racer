@@ -9,6 +9,9 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide,
   public rs.projecta.world.World w;
   public android.graphics.Path[] frames;
   public float frame, frame_delta, frame_max;
+  public final float size=24f;
+  public final float trgt_v=40;
+  public final float f=80;
 
 	public Player(float x, float y, rs.projecta.world.World world)
 	{
@@ -27,8 +30,8 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide,
 
     fix_def = new org.jbox2d.dynamics.FixtureDef();
     fix_def.shape = new org.jbox2d.collision.shapes.CircleShape();
-    fix_def.shape.setRadius(10f / this.w.phys_scale);
-    fix_def.density = 1;
+    fix_def.shape.setRadius(this.size / this.w.phys_scale);
+    fix_def.density = 0.08f;
     fix_def.friction = 0;
     fix_def.restitution = 1;
     fix_def.filter.groupIndex=-1;
@@ -99,16 +102,13 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide,
     this.frames[3].lineTo(10,0);
     this.frames[3].lineTo(5,-5);
     this.frames[3].lineTo(-5,-15);
+    
+    if (this.w.sounds!=null)
+      this.w.sounds.play(this.w.soundid_start, 1, 1, 0, 0, 1);
   }
 
 	public void Draw(rs.projecta.view.World_View v, android.graphics.Canvas c)
 	{
-    if (this.w.debug)
-    {
-      c.drawCircle(0, 0, 10f, p);
-    }
-    else
-    {
       this.frame=this.frame+this.frame_delta*((float)this.w.lapsed_time/1000000f);
       this.frame=this.frame%this.frame_max;
     
@@ -116,7 +116,6 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide,
       c.scale(4f, 4f);
       c.drawPath(this.frames[(int)this.frame], p);
       c.restore();
-    }
   }
 
 	public float Get_X()
@@ -247,7 +246,7 @@ implements Is_Drawable, Has_Position, Has_Direction, Can_Collide,
   
   public void Update(long dt)
   {
-    float curr_v, trgt_v=50, f=100;
+    float curr_v;
     org.jbox2d.common.Vec2 frwd_vec, body_frwd_vec, body_vel_vec;
 
     Remove_Lat_Vel(this.body);

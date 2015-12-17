@@ -65,6 +65,9 @@ extends Level
         this.Remove_Walls();
         this.Close_Door();
       }
+      
+      if (this.player.Get_Y() < -this.trg_step)
+        this.w.sounds.play(this.w.soundid_door, 1, 1, 0, 0, 1);
     }
   }
 

@@ -7,9 +7,10 @@ implements Is_Drawable
   public android.graphics.Paint paint;
   public int tile_span;
   public float tile_width, tile_height;
-  android.graphics.Point curr_tile_index, curr_paint_index;
+  public android.graphics.Point curr_tile_index, curr_paint_index;
   android.graphics.PointF curr_tile_pos;
   android.graphics.RectF rect;
+  public float cam_x, cam_y;
   
   public Background_Waves(Has_Position cam, float height, int col)
   { 
@@ -30,52 +31,41 @@ implements Is_Drawable
   
   public void Draw(rs.projecta.view.World_View v, android.graphics.Canvas c)
   {    
+    float tx, ty;
+    this.cam_x=cam.Get_X();
+    this.cam_y=cam.Get_Y();
+    
     for (curr_tile_index.y=0; curr_tile_index.y<this.tile_span+1; curr_tile_index.y++)
     {
       for (curr_tile_index.x=0; curr_tile_index.x<this.tile_span+1; curr_tile_index.x++)
       {
-        Calc_Tile_Pos(cam, curr_tile_index, tile_width, tile_span, curr_tile_pos);
-        Calc_Tile_Area(cam, curr_tile_pos, tile_width, tile_height, rect);
+        tx=cam_x+tile_width*(curr_tile_index.x-tile_span/2f);
+        ty=cam_y+tile_width*(curr_tile_index.y-tile_span/2f);
+        curr_tile_pos.x=(float)java.lang.Math.floor(tx/tile_width)*tile_width;
+        curr_tile_pos.y=(float)java.lang.Math.floor(ty/tile_width)*tile_width;
+        
+        tx = curr_tile_pos.x-cam_x;
+        ty = curr_tile_pos.y-cam_y;
+        rect.left = tx / tile_height + cam_x;
+        rect.top = ty / tile_height + cam_y;
+        rect.right = (tx + tile_width) / tile_height + cam_x;
+        rect.bottom = (ty + tile_width) / tile_height + cam_y;
         
         //Select_Tile_To_Render(cam, curr_tile_index, tile_width, tile_span, curr_paint_index);
         //c.drawRect(rect, this.paint[curr_paint_index.x][curr_paint_index.y]);
   
-        c.save();
-        c.translate(rect.left, rect.top);
-        Draw_Tile(c, rect.right-rect.left, rect.bottom-rect.top);
-        c.restore();
+        tx=(rect.right-rect.left)/2f+rect.left;
+        ty=(rect.bottom-rect.top)/2f+rect.top;
+        c.drawArc(
+          rect.left, rect.top, 
+          tx, ty, 
+          0, 180, false, this.paint);
+        c.drawArc(
+          tx, rect.top, 
+          rect.right, ty, 
+          180, 180, false, this.paint);
       }
     }
-  }
-  
-  public void Draw_Tile(android.graphics.Canvas c, float w, float h)
-  {
-    c.drawArc(0,    0, w/2f, h/2f, 0,   180, false, this.paint);
-    c.drawArc(w/2f, 0, w,    h/2f, 180, 180, false, this.paint);
-  }
-  
-  public static void Calc_Tile_Area(
-    Has_Position cam, android.graphics.PointF curr_tile_pos,
-    float tile_width, float tile_height,
-    android.graphics.RectF rect)
-  {
-    rect.left=Project(cam.Get_X(), curr_tile_pos.x, tile_height);
-    rect.top=Project(cam.Get_Y(), curr_tile_pos.y, tile_height);
-    rect.right=Project(cam.Get_X(), curr_tile_pos.x+tile_width, tile_height);
-    rect.bottom=Project(cam.Get_Y(), curr_tile_pos.y+tile_width, tile_height);
-  }
-  
-  public static void Calc_Tile_Pos(
-    Has_Position cam, android.graphics.Point curr_tile_index,
-    float tile_width, int tile_span,
-    android.graphics.PointF curr_tile_pos)
-  {
-    float tx, ty;
-    
-    tx=cam.Get_X()+tile_width*(curr_tile_index.x-tile_span/2f);
-    ty=cam.Get_Y()+tile_width*(curr_tile_index.y-tile_span/2f);
-    curr_tile_pos.x=(float)java.lang.Math.floor(tx/tile_width)*tile_width;
-    curr_tile_pos.y=(float)java.lang.Math.floor(ty/tile_width)*tile_width;
   }
   
   public static void Select_Tile_To_Render(
@@ -89,10 +79,5 @@ implements Is_Drawable
     ty=cam.Get_Y()/tile_width-(float)tile_span/2f+curr_tile_index.y;
     curr_paint_index.x=(int)java.lang.Math.abs(java.lang.Math.floor(tx)%tile_span);
     curr_paint_index.y=(int)java.lang.Math.abs(java.lang.Math.floor(ty)%tile_span);
-  }
-  
-  public static float Project(float o, float p, float height)
-  {
-    return (p-o)/height+o;
   }
 }

@@ -1,8 +1,10 @@
 package rs.projecta.world;
+//import android.media.*;
 
 public class World
 implements 
   org.jbox2d.callbacks.ContactListener,
+  android.media.SoundPool.OnLoadCompleteListener,
   java.lang.Runnable
 {
   public org.jbox2d.dynamics.World phys_world;
@@ -17,6 +19,9 @@ implements
   public boolean do_processing;
   public java.util.Random rnd;
   public long last_update, lapsed_time;
+  public android.media.SoundPool sounds;
+  public int soundid_whack, soundid_start, soundid_door;
+  public android.content.Context ctx;
   
   public static final int STATE_STOP=0;
   public static final int STATE_PLAY=1;
@@ -24,12 +29,40 @@ implements
   public static final int STATE_QUIT=3;
   public static final int STATE_LEVELFAIL=4;
   
-  public World(rs.projecta.world.World_Step_Listener l, rs.projecta.level.Level level)
+  public World(
+    android.content.Context ctx,
+    rs.projecta.world.World_Step_Listener l, 
+    rs.projecta.level.Level level)
   {
+    //this.debug=true;
+    this.ctx=ctx;
     this.debug_msg=new String[5];
     this.world_step_listener=l;
+    
+    //this.Init_Sound();
     this.Init_Level(level);
-    //this.debug=true;
+  }
+  
+  public void Init_Sound()
+  {
+    android.media.SoundPool.Builder b;
+    android.media.AudioAttributes.Builder a;
+    
+    if (this.sounds==null)
+    {
+      a=new android.media.AudioAttributes.Builder();
+      a.setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION);
+      a.setUsage(android.media.AudioAttributes.USAGE_GAME);
+    
+      b=new android.media.SoundPool.Builder();
+      b.setAudioAttributes(a.build());
+      b.setMaxStreams(3);
+      this.sounds=b.build();
+    
+      this.soundid_whack = this.sounds.load(ctx, rs.racer.R.raw.whack, 1);
+      this.soundid_start = this.sounds.load(ctx, rs.racer.R.raw.start, 1);
+      this.soundid_door = this.sounds.load(ctx, rs.racer.R.raw.door, 1);
+    }
   }
 
   public void Level_Fail()
@@ -79,7 +112,7 @@ implements
     //android.util.Log.d("Init_Level()", "Entered");
     
     this.rnd=new java.util.Random(0);
-    this.last_update=0;
+    this.last_update=System.nanoTime();
     this.state=STATE_PLAY; 
     this.phys_world=new org.jbox2d.dynamics.World(new org.jbox2d.common.Vec2(0,0));
     this.phys_world.setAllowSleep(true);
@@ -101,6 +134,8 @@ implements
     float sec_step;
     //android.util.Log.d("World.run()", "Entered");
     
+    android.os.Debug.startMethodTracing("rs.projecta");
+    
     this.do_processing=true;
     while (this.do_processing)
     {
@@ -108,7 +143,6 @@ implements
       this.lapsed_time=now-this.last_update;
       this.last_update=now;
       
-      //sec_step=this.lapsed_time/1600000000f;
       sec_step=this.lapsed_time/1800000000f;
       this.phys_world.step(sec_step, 8, 8);
       
@@ -120,6 +154,8 @@ implements
         
       this.objs.Process(); // remove and update
     }
+    
+    android.os.Debug.stopMethodTracing();
     
     this.game_loop=null;
     if (this.state==STATE_LEVELCOMPLETE || this.state==STATE_LEVELFAIL)
@@ -134,6 +170,7 @@ implements
     //android.util.Log.d("Start_Loop()", "Entered");
     if (this.game_loop == null)
     {
+      this.Init_Sound();
       this.game_loop = new Thread(this);
       this.game_loop.start();
     }
@@ -146,7 +183,9 @@ implements
     {
       this.do_processing=false;
       try {this.game_loop.join();} catch(java.lang.Exception e){}
-    }
+      this.sounds.release();
+      this.sounds=null;
+    } 
   }
   
   public String Gen_Level_Script()
@@ -197,5 +236,13 @@ implements
       "  }\n"+
       "}\n";
     return s;
+  }
+  
+  public void onLoadComplete(android.media.SoundPool sounds, int id, int status)
+  {
+    if (status==0)
+      android.util.Log.d("World.onLoadComplete()", "sound load complete");
+    else
+      android.util.Log.d("World.onLoadComplete()", "sound load failed");
   }
 }

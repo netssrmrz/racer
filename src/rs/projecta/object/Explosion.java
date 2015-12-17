@@ -22,6 +22,8 @@ implements Is_Drawable, Has_Position
     this.p.setStyle(android.graphics.Paint.Style.STROKE);
     this.p.setAntiAlias(false);
     this.p.setPathEffect(new android.graphics.DiscretePathEffect(15, 90));
+    
+    this.w.sounds.play(this.w.soundid_whack, 1, 1, 0, 0, 1);
   }
   
   @Override

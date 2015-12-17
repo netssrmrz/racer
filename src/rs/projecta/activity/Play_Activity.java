@@ -31,7 +31,7 @@ implements
     this.max_d=0;
     this.prev_d=0;
     this.curr_level=rs.projecta.level.Level.Get(this);
-    this.world=new rs.projecta.world.World(this, this.curr_level);
+    this.world=new rs.projecta.world.World(this, this, this.curr_level);
     
     this.tilt_man=new rs.projecta.Tilt_Manager(this);
     this.tilt_man.tilt_event_listener=this;
