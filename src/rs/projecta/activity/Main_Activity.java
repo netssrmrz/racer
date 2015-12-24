@@ -4,6 +4,8 @@ public class Main_Activity
 extends android.app.Activity
 implements android.widget.Button.OnClickListener
 { 
+  public android.widget.LinearLayout list_view;
+  
 	@Override
 	public void onCreate(android.os.Bundle saved_state)
 	{
@@ -11,8 +13,7 @@ implements android.widget.Button.OnClickListener
 		android.widget.Button button;
     rs.projecta.level.Level level=null;
     android.widget.LinearLayout.LayoutParams layout;
-    android.widget.LinearLayout list_view;
-
+    
 		super.onCreate(saved_state);
     this.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
     level = rs.projecta.level.Level.Get(rs.projecta.level.Flappy_Bird.class);
@@ -55,11 +56,19 @@ implements android.widget.Button.OnClickListener
   {
     android.content.Intent i;
     String level_class;
+    rs.projecta.view.Wave_Drawable b;
+    boolean is_fast=false;
+    
+    b=(rs.projecta.view.Wave_Drawable)this.list_view.getBackground();
+    //rs.android.ui.Util.Show_Note(this, "min_elapsed: "+b.min_elapsed);
+    if (b.min_elapsed<10000000)
+      is_fast=true;
 
     level_class = (String)button.getTag();
     i = new android.content.Intent(this, Play_Activity.class);
     i.setFlags(android.content.Intent.FLAG_ACTIVITY_NO_HISTORY);
     i.putExtra("level_class", level_class);
+    i.putExtra("is_fast", is_fast);
     this.startActivity(i);
   }
 }

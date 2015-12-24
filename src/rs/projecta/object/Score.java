@@ -25,6 +25,7 @@ implements Is_Drawable
 
     this.p = new android.graphics.Paint();
     this.p.setStyle(android.graphics.Paint.Style.STROKE);
+    this.p.setStrokeWidth(2);
     this.p.setColor(0xff00ff00);
     this.p.setAntiAlias(false);
     this.p.setTextAlign(android.graphics.Paint.Align.CENTER);

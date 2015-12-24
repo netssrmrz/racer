@@ -23,7 +23,8 @@ implements Is_Drawable, Has_Position
     this.p.setAntiAlias(false);
     this.p.setPathEffect(new android.graphics.DiscretePathEffect(15, 90));
     
-    this.w.sounds.play(this.w.soundid_whack, 1, 1, 0, 0, 1);
+    if (this.w.sounds!=null)
+      this.w.sounds.play(this.w.soundid_whack, 1, 1, 0, 0, 1);
   }
   
   @Override
@@ -33,7 +34,7 @@ implements Is_Drawable, Has_Position
     if (r>r_max)
     {
       w.objs.Remove(this);
-      //w.Level_Fail();
+      w.Level_Fail();
     }
     else
     {

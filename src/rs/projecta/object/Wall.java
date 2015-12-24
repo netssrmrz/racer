@@ -43,14 +43,18 @@ implements Is_Drawable, Has_Position, Has_Direction, Has_Cleanup
       
     this.p = new android.graphics.Paint();
     this.p.setStyle(android.graphics.Paint.Style.STROKE);
+    this.p.setStrokeWidth(2);
     this.p.setColor(0xffffff00);
     if (!this.world.debug)
       this.p.setPathEffect(new android.graphics.DiscretePathEffect(10, 10));
     this.p.setAntiAlias(false);
     
-    /*col1=android.graphics.Color.rgb(
-      world.rnd.nextInt(256), world.rnd.nextInt(256), world.rnd.nextInt(256));
-    col2=android.graphics.Color.rgb(
+    col1=android.graphics.Color.rgb(
+      128+world.rnd.nextInt(128), 
+      128+world.rnd.nextInt(128), 
+      128+world.rnd.nextInt(128));
+    this.p.setColor(col1);
+    /*col2=android.graphics.Color.rgb(
       world.rnd.nextInt(256), world.rnd.nextInt(256), world.rnd.nextInt(256));
     this.p.setShader(new android.graphics.LinearGradient(
       x1, y1, x2, y2, col1, col2, 

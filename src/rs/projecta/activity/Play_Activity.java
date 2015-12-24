@@ -17,6 +17,8 @@ implements
   @Override
   public void onCreate(android.os.Bundle saved_state)
   {
+    boolean is_fast;
+    
     super.onCreate(saved_state);
 
     //android.util.Log.d("Test_Activity.onCreate()", "Entered");
@@ -31,7 +33,8 @@ implements
     this.max_d=0;
     this.prev_d=0;
     this.curr_level=rs.projecta.level.Level.Get(this);
-    this.world=new rs.projecta.world.World(this, this, this.curr_level);
+    is_fast=this.getIntent().getBooleanExtra("is_fast", false);
+    this.world=new rs.projecta.world.World(this, this, this.curr_level, is_fast);
     
     this.tilt_man=new rs.projecta.Tilt_Manager(this);
     this.tilt_man.tilt_event_listener=this;

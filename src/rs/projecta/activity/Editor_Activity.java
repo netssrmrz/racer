@@ -87,7 +87,7 @@ rs.projecta.dialog.Editor_Objs.OnDialogSelectListener
     button.setId(BUTTONID_SCR);
     button_bar.addView(button);
     
-    world = new rs.projecta.world.World(this, null, new rs.projecta.level.Editor_Level());
+    world = new rs.projecta.world.World(this, null, new rs.projecta.level.Editor_Level(), true);
 
     world_view = new rs.projecta.view.Design_View(this, world);
 

@@ -82,7 +82,8 @@ extends android.view.View
         -((rs.projecta.object.Has_Position)this.camera).Get_X(), 
         -((rs.projecta.object.Has_Position)this.camera).Get_Y());
 
-    c.drawColor(0x44000000);
+    c.drawColor(0xff000022);
+      
     this.world.objs.Draw(this, c);
     
     if (this.debug_renderer!=null)

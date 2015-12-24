@@ -4,29 +4,36 @@ public class Wave_Drawable
 extends android.graphics.drawable.Drawable
 implements rs.projecta.object.Has_Position
 {
-  public rs.projecta.object.Background_Waves bk1, bk2, bk3, bk4;
+  public static final int WAVES=30;
+  public rs.projecta.object.Background_Waves[] bks;
   public float[] pos;
   public android.graphics.Paint p;
   public android.graphics.Matrix mat;
   public long last_time;
   public float text_size;
+  public long min_elapsed;
   
   public Wave_Drawable()
   {
+    int c;
+    
     this.text_size=0;
+    this.min_elapsed=999999999;
+    this.last_time=System.nanoTime();
     
     this.pos=new float[2];
     this.pos[0]=1000;
     this.pos[1]=1000;
     
-    this.bk1=new rs.projecta.object.Background_Waves(this, 1.2f, 0xff0000ff);
-    this.bk2=new rs.projecta.object.Background_Waves(this, 1.4f, 0xff0000cc);
-    this.bk3=new rs.projecta.object.Background_Waves(this, 1.6f, 0xff000088);
-    this.bk4=new rs.projecta.object.Background_Waves(this, 1.8f, 0xff000044);
+    this.bks=new rs.projecta.object.Background_Waves[WAVES];
+    for (c=0; c<WAVES; c++)
+      this.bks[c]=new rs.projecta.object.Background_Waves(
+        this, (float)c/40f+1f, android.graphics.Color.rgb(
+          0, 0, (int)( (256f/(float)WAVES) * (float)(WAVES-c) )));
     
     this.p=new android.graphics.Paint();
     this.p.setStyle(android.graphics.Paint.Style.STROKE);
-    this.p.setStrokeWidth(1);
+    this.p.setStrokeWidth(2);
     this.p.setColor(0xffffff00);
     this.p.setTextSize(200);
     this.p.setTextAlign(android.graphics.Paint.Align.CENTER);
@@ -58,13 +65,18 @@ implements rs.projecta.object.Has_Position
     c.save();
     c.translate(c.getWidth()/2f-this.Get_X(), c.getHeight()/2f-this.Get_Y());
     
-    this.bk4.Draw(null, c);
-    this.bk3.Draw(null, c);
-    this.bk2.Draw(null, c);
-    this.bk1.Draw(null, c);
+    for (rs.projecta.object.Background_Waves bk: this.bks)
+      if (bk!=null)
+        bk.Draw(null, c);
+    
     c.drawText("Coral Racer", this.Get_X(), this.Get_Y(), this.p);
  
     c.restore();
+    
+    //android.util.Log.d("Wave_Drawable.draw()", "elapsed_time: "+elapsed_time);
+    elapsed_time=System.nanoTime()-now;
+    if (elapsed_time<this.min_elapsed)
+      this.min_elapsed=elapsed_time;
   }
 
   @Override
